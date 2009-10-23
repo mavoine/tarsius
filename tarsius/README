@@ -1,0 +1,34 @@
+
+USERS
+-----
+
+Sorry people, the project is still under heavy development. That means making 
+binaries available would be very irresponsible from me because it can break 
+anytime. Come around the project web page from time to time, there will be 
+binaries as soon as Tarsius becomes stable.
+
+	http://code.google.com/p/tarsius/
+
+DEVELOPERS
+----------
+
+So, you want to 'hack'? Forget about hacking, it's for complicated projects ;)
+Seriously, Tarsius is all about simplicity: simple to use and simple to modify.
+If you want to contribute, simply check out the source code and have a look.
+Patches are always welcome. If you prefer to branch off the project, that's
+fine with me (it's a free world!), but please make sure you replace the branding
+and modify the code to avoid conflicts with Tarsius regarding configuration
+before you make any binaries available on the web. Also, seriously consider the
+option of contributing to Tarsius, either by backporting your modifications or
+by sharing common components; there is already enough fragmentation of efforts 
+in the open source community.
+
+For more information, visit:
+
+	http://code.google.com/p/tarsius/source/checkout
+
+There is some info about development on Tarsius in the DEV file.
+
+Thanks and happy coding!
+
+Mathieu Avoine

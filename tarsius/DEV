@@ -1,0 +1,20 @@
+
+Switches:
+
+	tarsius.localdir    > path to an alternate location for the local directory
+	tarsius.gallery     > path to a gallery to open on startup
+	tarsius.locale      > override the locale
+	tarsius.thumbsclass > override the implementation for the thumbs permanent cache
+ 
+External dependencies
+ 
+	whirlycache
+	concurrent (required by whirlycache)
+		
+
+A short checklist of stuff to look after when developing a GUI
+
+ * mnemonics/shortcuts
+ * internationalization and spacing: some languages need more room than others
+ * growing/shrinking behavior
+ 

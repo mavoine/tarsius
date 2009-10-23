@@ -1,0 +1,19 @@
+package org.tarsius.event;
+
+public class Event {
+	
+	public static enum Type {
+		TEST_EVENT_1,
+		TEST_EVENT_2,
+		TEST_EVENT_3,
+		GALLERY_OPENED,
+		GALLERY_CLOSED,
+		GALLERY_CHANGED,
+		TAGS_CHANGED,
+		FILTER_CHANGED,
+		APPLICATION_SHUTDOWN_REQUEST,
+		OPEN_VIEWER,
+		OPEN_BROWSER
+	}
+
+}

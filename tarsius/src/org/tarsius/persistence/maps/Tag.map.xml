@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Tag">
+
+	<insert id="insertTag" parameterClass="Tag">
+		<selectKey type="pre" keyProperty="id" >
+			SELECT NEXT VALUE FOR seq_tag_id as id FROM info
+		</selectKey>
+		INSERT INTO 
+			tag (tag_id, name, parent_tag_id) 
+			VALUES (#id#, #name#, #idParent#)
+	</insert>
+	
+	<update id="updateTag" parameterClass="Tag">
+		UPDATE tag SET name = #name#, parent_tag_id = #idParent# where tag_id = #id#
+	</update>
+
+	<select id="getTag" resultClass="Tag">
+		SELECT
+			tag_id as id,
+			name,
+			parent_tag_id as idParent
+		FROM tag
+		WHERE tag_id = #id#
+	</select>
+	
+	<select id="getAllTags" resultClass="Tag">
+		SELECT
+			tag_id as id,
+			name,
+			parent_tag_id as idParent
+		FROM tag
+	</select>
+
+	<select id="countTags" resultClass="Integer">
+		SELECT COUNT(*) AS nb FROM tag
+	</select>
+	
+	<select id="countTaggedPhotos" resultClass="Integer" parameterClass="Tag">
+		SELECT COUNT(*) AS nb FROM photo_tag WHERE tag_id = #id#
+	</select>
+
+	<select id="countTaggedPhotosIncludingChildren" resultClass="Integer" 
+		parameterClass="Tag">
+		SELECT COUNT(*) AS nb 
+		FROM photo_tag 
+		WHERE 
+			tag_id = #id#	 OR
+			tag_id IN (SELECT child_tag_id FROM tag_children WHERE tag_id = #id#)
+	</select>
+	
+	<!-- 
+	<select id="findTags" parameterClass="PhotoCriteria" resultClass="Photo">
+		SELECT
+			photo_id as id,
+			date_shot as date,
+			path,
+			is_path_relative as isPathRelative
+		FROM photo
+		<dynamic prepend="WHERE">
+			<isEqual property="timeRestriction" compareValue="true" >
+				date_shot BETWEEN #startDate# AND #endDate#
+			</isEqual>
+		</dynamic>
+	</select>
+ -->
+
+	<insert id="addTag" parameterClass="Map">
+		INSERT INTO photo_tag (tag_id, photo_id) values (#tagId#, #photoId#)
+	</insert>
+	
+	<delete id="removeTag" parameterClass="Map">
+		DELETE FROM photo_tag WHERE tag_id = #tagId# and photo_id = #photoId#
+	</delete>
+	
+	<insert id="insertTagChild" parameterClass="Map">
+		INSERT INTO tag_children (tag_id, child_tag_id) values (#tagId#, #childTagId#)
+	</insert>
+	
+	<delete id="deleteTag" parameterClass="Tag">
+		DELETE FROM tag WHERE tag_id = #id#
+	</delete>
+
+	<delete id="deleteTagFromChildren" parameterClass="Tag">
+		DELETE FROM tag_children WHERE child_tag_id = #id#
+	</delete>
+	
+	<delete id="deleteTagFromPhotoTag" parameterClass="Tag">
+		DELETE FROM photo_tag WHERE tag_id = #id#
+	</delete>
+	
+	<select id="countTagChildren" parameterClass="Tag" resultClass="Integer">
+		SELECT COUNT(*) AS nb FROM tag_children WHERE tag_id = #id#
+	</select>
+ 
+</sqlMap>

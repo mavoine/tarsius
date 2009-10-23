@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Photo">
+
+	<resultMap id="photoRM" class="Photo" groupBy="id">
+		<result property="id" column="photo_id"/>
+		<result property="date" column="date_shot"/>
+		<result property="path" column="path"/>
+		<result property="isPathRelative" column="is_path_relative"/>
+		<result property="tags" resultMap="Photo.tagRM"/>
+	</resultMap>
+
+	<resultMap id="tagRM" class="Tag">
+		<result property="id" column="tag_id"/>
+		<result property="name" column="name"/>
+		<result property="idParent" column="parent_tag_id"/>
+	</resultMap>
+
+	<insert id="insertPhoto" parameterClass="Photo">
+		<selectKey type="pre" keyProperty="id" >
+			SELECT NEXT VALUE FOR seq_photo_id as id FROM info
+		</selectKey>
+		INSERT INTO 
+			photo (photo_id, date_shot, path, is_path_relative) 
+			VALUES (#id#, #date#, #path#, #isPathRelative#)
+	</insert>
+
+	<select id="getPhoto" resultClass="Photo" resultMap="photoRM">
+		SELECT p.*, t.*
+		FROM photo p
+			LEFT JOIN photo_tag pt ON pt.photo_id = p.photo_id
+			LEFT JOIN tag t ON t.tag_id = pt.tag_id
+		WHERE 
+			photo_id = #id#
+	</select>
+
+	<select id="getCountPhotos" resultClass="Integer">
+		SELECT COUNT(*) AS NB FROM PHOTO
+	</select>
+	
+	<select id="getPhotos" parameterClass="PhotoCriteria" resultClass="Photo" 
+		resultMap="photoRM">
+		SELECT p.*, t.*
+		FROM photo as p
+			LEFT JOIN photo_tag pt ON pt.photo_id = p.photo_id
+			LEFT JOIN tag t ON t.tag_id = pt.tag_id
+<!-- 		<dynamic>
+			<isEqual property="tagRestriction" compareValue="true" >
+				JOIN photo_tag AS pt ON p.photo_id = pt.photo_id AND pt.tag_id = t.tag_id
+			</isEqual>
+		</dynamic> -->
+		<dynamic prepend="WHERE">
+			<isEqual property="timeRestriction" compareValue="true" >
+				date_shot BETWEEN #startDate# AND #endDate#
+			</isEqual>
+			<isEqual property="tagRestriction" compareValue="true" prepend="AND" >
+				t.tag_id = #tagId#
+			</isEqual>
+		</dynamic>
+		ORDER BY date_shot ASC
+	</select>
+
+	<select id="getNextPhotoId" resultClass="Integer">
+		SELECT NEXT VALUE FOR seq_photo_id as ID FROM info
+	</select>
+	
+	<delete id="deletePhoto" parameterClass="Photo">
+		DELETE FROM photo WHERE photo_id = #id#
+	</delete>
+	
+	<delete id="deletePhotoTags" parameterClass="Photo">
+		DELETE FROM photo_tag WHERE photo_id = #id#
+	</delete>
+	
+</sqlMap>

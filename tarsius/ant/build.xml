@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="tarsius" default="compile">
+	
+	<tstamp prefix="now">
+	</tstamp>
+	
+	<property name="antdir" value="${basedir}/ant" />
+	<property name="srcdir" value="${basedir}/src" />
+	<property name="libdir" value="${basedir}/lib" />
+	<property name="confdir" value="${basedir}/conf" />
+	<property name="scriptdir" value="${basedir}/script" />
+	<property name="bindir" value="${basedir}/bin" />
+	<property name="builddir" value="${basedir}/build" />
+	<property name="compiledir" value="${builddir}/compile" />
+	<property name="jardir" value="${builddir}/jar" />
+	<property name="distdir" value="${builddir}/dist" />
+
+	<property file="${antdir}/build.properties" />
+	<property file="${confdir}/global.properties" />
+
+	<target name="test">
+		<echo>${now.DSTAMP}</echo>
+	</target>
+	
+	<target name="backup" description="">
+		<tar basedir="${basedir}" compression="gzip"
+			destfile="/home/user/MMC-SD/CANON_DC/dev/backup/tarsius.${now.DSTAMP}.tgz">
+		</tar>
+		<echo>Backup completed</echo>
+	</target>
+	
+	<target name="init">
+		<mkdir dir="${builddir}"/>
+	</target>
+	
+	<target name="compile" depends="init">
+		<echo>Compiling</echo>
+		<mkdir dir="${compiledir}"/>
+		<javac destdir="${compiledir}" srcdir="${srcdir}" classpath="${classpath}"
+			verbose="false">
+		</javac>
+
+		<echo>Copying additional resources</echo>
+		<copy todir="${compiledir}">
+			<fileset dir="${srcdir}" includes="**/*.map.xml" />
+		</copy>
+	</target>
+	
+	<target name="makejar" depends="compile">
+		<echo>Emptying the jar directory</echo>
+		<delete dir="${jardir}" includes="*/**" includeemptydirs="true" />
+		<mkdir dir="${jardir}"/>
+
+		<echo>Making tarsius.jar</echo>
+		<jar destfile="${jardir}/tarsius.jar" basedir="${compiledir}">
+			<manifest>
+				<attribute name="Tarsius-Version" value="${program.version}"/>
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="makedist" depends="makejar">
+		<echo>Emptying the dist directory</echo>
+		<delete dir="${distdir}" includes="*/**" includeemptydirs="true" />
+		<mkdir dir="${distdir}"/>
+
+		<echo>Copying required libraries</echo>
+		<mkdir dir="${distdir}/lib"/>
+		<copy todir="${distdir}/lib">
+			<fileset dir="${libdir}" includes="*.jar" />
+			<!-- TODO copy only libraries required for runtime -->
+		</copy>
+		<copy todir="${distdir}/lib" file="${jardir}/tarsius.jar" />
+		
+		<echo>Copying configuration files</echo>
+		<mkdir dir="${distdir}/conf"/>
+		<copy todir="${distdir}/conf">
+			<fileset dir="${confdir}">
+				<include name="global.properties"/>
+				<include name="iBatisConfig.xml"/>
+				<include name="translation_*.properties"/>
+				<include name="whirlycache.xml"/>
+			</fileset>
+		</copy>
+		<copy tofile="${distdir}/conf/log4j.properties" 
+		      file="${confdir}/log4j.properties"/>
+		
+		<echo>Copying scripts</echo>
+		<mkdir dir="${distdir}/script"/>
+		<copy todir="${distdir}/script">
+			<fileset dir="${scriptdir}">
+				<include name="dbstruct"/>
+			</fileset>
+		</copy>
+		
+		<echo>Copying launch script</echo>
+		<copy todir="${distdir}" file="${bindir}/run"/>
+	</target>
+
+</project>
