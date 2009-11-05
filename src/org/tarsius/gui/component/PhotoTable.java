@@ -15,11 +15,13 @@ public class PhotoTable extends JList implements PhotoSelectionProvider {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Vector<?> listData = null;
+	private List<Photo> listData = null;
+	private PhotoCellRenderer photoCellRenderer = null;
 	
 	public PhotoTable() {
 		this.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-		this.setCellRenderer(new PhotoCellRenderer());
+		this.photoCellRenderer = new PhotoCellRenderer();
+		this.setCellRenderer(this.photoCellRenderer);
 		this.setVisibleRowCount(-1);
 		this.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 	}
@@ -35,28 +37,39 @@ public class PhotoTable extends JList implements PhotoSelectionProvider {
 	@Override
 	public void setListData(Vector<?> listData) {
 		super.setListData(listData);
-		this.listData = listData;
+		List<Photo> tmpList = new ArrayList<Photo>();
+		for(Object obj : listData){
+			if(obj instanceof Photo){
+				tmpList.add((Photo)obj);
+			}
+		}
+		setData(tmpList);
 	}
 	
 	@Override
 	public void setListData(Object[] listData) {
-		Vector<Object> v = new Vector<Object>();
-		for(Object object : listData){
-			v.add(object);
+		super.setListData(listData);
+		List<Photo> tmpList = new ArrayList<Photo>();
+		for(Object obj : listData){
+			if(obj instanceof Photo){
+				tmpList.add((Photo)obj);
+			}
 		}
-		setListData(v);
+		setData(tmpList);
 	}
 	
 	public void setListData(List<Photo> listData){
-		if(listData != null){
-			setListData(listData.toArray());
-		} else {
-			setListData(new Photo[]{});
-		}
+		super.setListData(listData == null ? new Photo[]{} : listData.toArray());
+		setData(listData);
+	}
+	
+	private void setData(List<Photo> listData){
+		this.listData = listData;
+		this.photoCellRenderer.prepareCells(listData);
 	}
 	
 	public Photo getPhotoAt(int index){
-		return (Photo)listData.get(index);
+		return listData.get(index);
 	}
 
 	/**
@@ -68,14 +81,14 @@ public class PhotoTable extends JList implements PhotoSelectionProvider {
 		List<Photo> selectedPhotos = new ArrayList<Photo>();
 		int[] selectedIndices = getSelectedIndices();
 		for(int index : selectedIndices){
-			selectedPhotos.add((Photo)listData.get(index));
+			selectedPhotos.add(listData.get(index));
 		}
 		return selectedPhotos;
 	}
 	
 	public Photo getPhotoAtLocation(int x, int y){
 		int index = this.locationToIndex(new Point(x, y));
-		return (Photo)listData.get(index);
+		return listData.get(index);
 	}
 	
 	public void addPhotoToSelection(Photo photo){

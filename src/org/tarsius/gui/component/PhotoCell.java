@@ -30,17 +30,24 @@ public class PhotoCell extends JPanel {
 	private static Log log = LogFactory.getLog(PhotoCell.class);
 	
 	// TODO get the default "selected" color for the L&F
-	private static Color selectedColor = new Color(100,160,245);
-	private static Border focusBorder =
+	private static final Color selectedColor = new Color(100,160,245);
+	private static final Color unselectedColor = Color.WHITE;
+	private static final Border focusBorder =
 		BorderFactory.createLineBorder(Color.ORANGE, 2);
-	private static Border blurBorder = 
+	private static final Border blurBorder = 
 		BorderFactory.createLineBorder(Color.WHITE, 2);
 
+	// components
 	private JLabel photoLabel = null;
 	private JLabel tagsLabel = null;
 	private JLabel dateLabel = null;
+	private JPanel borderPanel = null;
 	
-	public PhotoCell(Photo photo, boolean hasFocus, boolean isSelected) {
+	// properties
+	private boolean hasFocus = false;
+	private boolean isSelected = false;
+	
+	public PhotoCell(Photo photo) {
 		log.trace("Constructor called");
 		MigLayout cellLayout = new MigLayout(
 				"",  // layout constraints
@@ -58,7 +65,7 @@ public class PhotoCell extends JPanel {
 				"",  // layout constraints
 				"2[grow,center]2",  // column constraints
 				"2[grow,center]2"); // row constraints
-		JPanel borderPanel = new JPanel(borderPanelLayout);
+		borderPanel = new JPanel(borderPanelLayout);
 		borderPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2));
 
 		photoLabel = new JLabel();
@@ -79,17 +86,8 @@ public class PhotoCell extends JPanel {
 		this.add(dateLabel, "wrap");
 		this.add(tagsLabel, "");
 		
-		if(hasFocus){
-			this.setBorder(focusBorder);
-		} else {
-			this.setBorder(blurBorder);
-		}
-
-		if(isSelected){
-			borderPanel.setBackground(selectedColor);
-		} else {
-			borderPanel.setBackground(Color.WHITE);
-		}
+		setSelected(false);
+		setHasFocus(false);
 	}
 	
 	private String buildTagList(List<Tag> tags){
@@ -105,6 +103,32 @@ public class PhotoCell extends JPanel {
 			}
 		}
 		return tagsList.length() > 0 ? tagsList : " ";
+	}
+	
+	public void setSelected(boolean isSelected){
+		this.isSelected = isSelected;
+		if(isSelected){
+			borderPanel.setBackground(selectedColor);
+		} else {
+			borderPanel.setBackground(unselectedColor);
+		}
+	}
+	
+	public boolean isSelected(){
+		return this.isSelected;
+	}
+	
+	public void setHasFocus(boolean hasFocus){
+		this.hasFocus = hasFocus;
+		if(hasFocus){
+			this.setBorder(focusBorder);
+		} else {
+			this.setBorder(blurBorder);
+		}
+	}
+	
+	public boolean hasFocus(){
+		return this.hasFocus;
 	}
 	
 }

@@ -1,6 +1,8 @@
 package org.tarsius.gui.component;
 
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
@@ -14,20 +16,28 @@ public class PhotoCellRenderer implements ListCellRenderer {
 	@SuppressWarnings("unused")
 	private static Log log = LogFactory.getLog(PhotoCellRenderer.class);
 	
+	private List<PhotoCell> photoCells = null;
+	
 	public PhotoCellRenderer() {
 		log.trace("Constructor called");
+	}
+	
+	public void prepareCells(List<Photo> listData){
+		photoCells = new ArrayList<PhotoCell>();
+		for(Photo photo : listData){
+			PhotoCell cell = new PhotoCell(photo);
+			photoCells.add(cell);
+		}
 	}
 	
 	public Component getListCellRendererComponent(JList list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {
 		log.trace("getListCellRendererComponent called");
-		// FIXME building a new PhotoCell everytime this method is called causes serious display issues
-		// solution: build the list of PhotoCell objects once, then make this method fetch the object from
-		// a collection, set properties (ex. for selection and focus) and return it  
 		Component component = null;
-		if(value instanceof Photo){
-			Photo photo = (Photo)value;
-			PhotoCell cell = new PhotoCell(photo, cellHasFocus, isSelected);
+		if(value instanceof Photo && index < photoCells.size()){
+			PhotoCell cell = photoCells.get(index);
+			cell.setSelected(isSelected);
+			cell.setHasFocus(cellHasFocus);
 			component = cell;
 		}
 		return component;
