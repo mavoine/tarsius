@@ -24,9 +24,11 @@ public class PhotoCellRenderer implements ListCellRenderer {
 	
 	public void prepareCells(List<Photo> listData){
 		photoCells = new ArrayList<PhotoCell>();
-		for(Photo photo : listData){
-			PhotoCell cell = new PhotoCell(photo);
-			photoCells.add(cell);
+		if(listData != null){
+			for(Photo photo : listData){
+				PhotoCell cell = new PhotoCell(photo);
+				photoCells.add(cell);
+			}
 		}
 	}
 	
