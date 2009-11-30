@@ -17,6 +17,7 @@ import net.miginfocom.swing.MigLayout;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.tarsius.Context;
 import org.tarsius.bean.Photo;
 import org.tarsius.config.Resources;
 import org.tarsius.gui.event.ComponentResizeListener;
@@ -72,7 +73,7 @@ public class PhotoFrame_bk extends JPanel {
 		BufferedImage bufferedImage = null;
 		Image image = null;
 		try {
-			File file = new File(photo.getAbsolutePath());
+			File file = new File(Context.getGallery().getPhotosPath() + photo.getPath());
 			bufferedImage = ImageIO.read(file);
 			Dimension frameSize = new Dimension(photoLabel.getWidth(), 
 					photoLabel.getHeight());

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.tarsius.Context;
 import org.tarsius.bean.Photo;
 import org.tarsius.event.Event;
 import org.tarsius.event.EventBelt;
@@ -26,8 +27,8 @@ public class ViewerControler implements PhotoSelectionProvider,
 		this.mainControler = mainControler;
 	}
 	
-	public void bind(ViewerPane viewerPane){
-		this.viewerPane = viewerPane;
+	public void bind(ViewerPane pane){
+		this.viewerPane = pane;
 
 		// bind event listeners
 		EventBelt.getInstance().registerListener(this);
@@ -48,7 +49,7 @@ public class ViewerControler implements PhotoSelectionProvider,
 	
 	private void refreshUI(){
 		Photo currentPhoto = photoSet.get(index);
-		File photoFile = new File(currentPhoto.getAbsolutePath());
+		File photoFile = new File(Context.getGallery().getPhotosPath() + currentPhoto.getPath());
 		// set next/previous controls
 		
 		// set info

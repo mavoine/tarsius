@@ -38,7 +38,7 @@ public class MainControler {
 	public void galleryOpened(){
 		// set window title
 		mainWindow.setTitle(I18n.translate("ApplicationName") + " - " +
-				Context.getGallery().getGalleryPath());
+				Context.getGallery().getRootPath());
 		// set actions
 		mainWindow.openGalleryAction.setEnabled(false);
 		mainWindow.closeGalleryAction.setEnabled(true);

@@ -8,7 +8,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tarsius.event.Event;
 import org.tarsius.event.EventBelt;
-import org.tarsius.imaging.ThumbnailsFactory;
 import org.tarsius.persistence.Database;
 import org.tarsius.persistence.ScriptLoader;
 
@@ -72,7 +71,7 @@ public class Gallery {
 			
 			galleryPath = path;
 			
-			ThumbnailsFactory.init();
+//			ThumbnailsFactory.init();
 			
 			log.info("Gallery opened");
 			EventBelt.getInstance().dispatch(Event.Type.GALLERY_OPENED);
@@ -128,20 +127,32 @@ public class Gallery {
 		log.info("Gallery closed");
 	}
 	
-	public String getGalleryPath() {
+	/**
+	 * Returns the absolute path to the gallery's root directory.
+	 * @return path to gallery's root directory
+	 */
+	public String getRootPath() {
 		return galleryPath;
 	}
 	
-	public boolean isOpen(){
-		return galleryPath != null;
-	}
-
+	/**
+	 * Returns the absolute path to the gallery's photo directory.
+	 * @return path to gallery's photo directory
+	 */
 	public String getPhotosPath() {
 		return galleryPath + PHOTO_LOCATION;
 	}
 	
+	/**
+	 * Returns the absolute path to the gallery's thumbnails directory.
+	 * @return path to gallery's thumbnails directory
+	 */
 	public String getThumbsPath() {
 		return galleryPath + THUMBS_LOCATION;
+	}
+
+	public boolean isOpen(){
+		return galleryPath != null;
 	}
 
 }

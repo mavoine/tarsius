@@ -14,7 +14,6 @@ import org.tarsius.event.EventBelt;
 import org.tarsius.gui.component.ProgressDialog;
 import org.tarsius.i18n.I18n;
 import org.tarsius.imaging.PhotoLoader;
-import org.tarsius.imaging.ThumbnailsFactory;
 import org.tarsius.persistence.PersistenceException;
 import org.tarsius.persistence.dao.PhotoDAO;
 import org.tarsius.util.PathUtil;
@@ -78,8 +77,6 @@ public class ImportPhotoTask extends BackgroundTask {
 			}
 			// load new photo
 			photo = pl.load(fileInGallery);
-			// create thumbnail
-			ThumbnailsFactory.getInstance().getThumbnail(pathInGallery);
 			// import into database
 			try {
 				PhotoDAO.getInstance().insertPhoto(photo);

@@ -1,20 +1,27 @@
 package org.tarsius.gui;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.tarsius.Context;
 import org.tarsius.bean.Photo;
 import org.tarsius.bean.Tag;
 import org.tarsius.i18n.I18n;
 import org.tarsius.imaging.PhotoLoader;
+import org.tarsius.imaging.ThumbnailsFactory;
 
 
 public class BrowserPaneTest extends UITest {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 
 		I18n.init();
+		
+		String userDir = System.getProperty("user.dir");
+		Context.getGallery().openGallery(userDir + File.separatorChar + "testdata", null);
+		ThumbnailsFactory.getInstance().setPermanentCaching(false);
 
 		MainWindow mainWindow = new MainWindow();
 		BrowserPane browserPane = new BrowserPane();
@@ -35,8 +42,7 @@ public class BrowserPaneTest extends UITest {
 		browserPane.addTagMenu.setData(tags);
 
 		// add some Photo test data
-		String photoDir = System.getProperty("user.dir") + File.separator
-				+ "testdata" + File.separator + "photos" + File.separator;
+		String photoDir = Context.getGallery().getPhotosPath() + File.separator;
 		PhotoLoader pl = new PhotoLoader();
 		Photo photo1 = pl.load(new File(photoDir + "rc0005.jpg"));
 		Photo photo2 = pl.load(new File(photoDir + "rc0010.jpg"));
@@ -54,10 +60,9 @@ public class BrowserPaneTest extends UITest {
 		browserPane.photoTable.setEnabled(true);
 		browserPane.tagTree.setEnabled(true);
 		
-		mainWindow.show(browserPane);
-		
 		mainWindow.pack();
-		
+		mainWindow.show(browserPane);
+
 		showUI(mainWindow);
 	}
 

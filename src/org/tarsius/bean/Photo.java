@@ -3,8 +3,6 @@ package org.tarsius.bean;
 import java.util.Date;
 import java.util.List;
 
-import org.tarsius.Context;
-
 public class Photo {
 	
 	private Integer id = -1;
@@ -54,19 +52,6 @@ public class Photo {
 	
 	public List<Tag> getTags() {
 		return tags;
-	}
-	
-	/**
-	 * Conveniance method to get the absolute path of the photo.
-	 * @return String
-	 */
-	public String getAbsolutePath(){
-		// TODO resolve if the added dependency on Context is OK, else decouple it
-		if(this.isPathRelative){
-			return Context.getGallery().getPhotosPath() + this.path;
-		} else {
-			return this.path;
-		}
 	}
 	
 	@Override

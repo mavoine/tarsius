@@ -10,14 +10,17 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
 import net.miginfocom.swing.MigLayout;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.tarsius.Context;
 import org.tarsius.bean.Photo;
 import org.tarsius.bean.Tag;
+import org.tarsius.imaging.ThumbnailsCallback;
 import org.tarsius.imaging.ThumbnailsFactory;
 import org.tarsius.util.DateUtil;
 import org.tarsius.util.StringUtil;
@@ -57,23 +60,23 @@ public class PhotoCell extends JPanel {
 
 		this.setBackground(Color.WHITE);
 
-		// load the thumbnail
-		Image thumbnail = ThumbnailsFactory.getInstance().getThumbnail(
-				photo.getAbsolutePath());
-
 		MigLayout borderPanelLayout = new MigLayout(
-				"",  // layout constraints
+				"",                 // layout constraints
 				"2[grow,center]2",  // column constraints
-				"2[grow,center]2"); // row constraints
+				"2[grow,center]2"   // row constraints
+		);
 		borderPanel = new JPanel(borderPanelLayout);
 		borderPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2));
 
 		photoLabel = new JLabel();
-		photoLabel.setVerticalTextPosition(JLabel.BOTTOM);
-		photoLabel.setHorizontalTextPosition(JLabel.CENTER);
-		photoLabel.setIcon(new ImageIcon(thumbnail));
+		photoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		photoLabel.setVerticalAlignment(SwingConstants.CENTER);
+		photoLabel.setSize(
+				ThumbnailsFactory.getInstance().getThumbnailMaxWidth(),
+				ThumbnailsFactory.getInstance().getThumbnailMaxHeight());
+//		photoLabel.setText("loading..."); // TODO add default icon meaning "loading..."
 		
-		borderPanel.add(photoLabel, "center");
+		borderPanel.add(photoLabel);
 		
 		dateLabel = new JLabel();
 		dateLabel.setText(DateUtil.formatDate(photo.getDate()));
@@ -88,6 +91,15 @@ public class PhotoCell extends JPanel {
 		
 		setSelected(false);
 		setHasFocus(false);
+		
+		// load the thumbnail
+		ThumbnailsFactory.getInstance().getThumbnail(Context.getGallery().getPhotosPath(), photo.getPath(),
+			new ThumbnailsCallback() {
+				public void execute(Image image) {
+					photoLabel.setIcon(new ImageIcon(image));
+					borderPanel.revalidate();
+				}
+		});
 	}
 	
 	private String buildTagList(List<Tag> tags){

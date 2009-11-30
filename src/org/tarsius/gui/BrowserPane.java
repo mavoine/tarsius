@@ -81,7 +81,7 @@ public class BrowserPane extends JPanel implements Perspective {
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		photoTableScrollPane.setHorizontalScrollBarPolicy(
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		photoTableScrollPane.setPreferredSize(new Dimension(300, 300));
+		photoTableScrollPane.setMinimumSize(new Dimension(300, 300));
 
 		// create the tag panel
 		MigLayout tagPanelLayout = new MigLayout(

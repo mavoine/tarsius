@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.tarsius.Context;
 import org.tarsius.bean.Photo;
 import org.tarsius.imaging.ThumbnailsFactory;
 import org.tarsius.persistence.dao.PhotoDAO;
@@ -22,14 +23,14 @@ public class DeletePhotoTask {
 		this.photos = photos;
 		this.deleteFromDrive = deleteFromDrive;
 	}
-		
+	
 	public void execute() throws TaskException {
 		try {
 			List<String> photosToDelete = new ArrayList<String>();
 			// TODO transaction
 			for (Photo photo : photos) {
 				log.debug("Delete photo: " + photo);
-				photosToDelete.add(photo.getAbsolutePath());
+				photosToDelete.add(Context.getGallery().getPhotosPath() + photo.getPath());
 				PhotoDAO.getInstance().deletePhoto(photo);
 			}
 			if(deleteFromDrive){

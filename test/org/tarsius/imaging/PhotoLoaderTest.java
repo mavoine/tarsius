@@ -5,14 +5,13 @@ import java.text.ParseException;
 
 import org.tarsius.Context;
 import org.tarsius.bean.Photo;
-import org.tarsius.imaging.PhotoLoader;
 import org.tarsius.test.ExtendedTestCase;
 import org.tarsius.util.DateUtil;
 
 public class PhotoLoaderTest extends ExtendedTestCase {
 
 	public void testLoad() throws ParseException{
-		File file = new File(Context.getGallery().getGalleryPath() + "/testdata/photos/rc0005.jpg");
+		File file = new File(Context.getGallery().getRootPath() + "/testdata/photo/rc0005.jpg");
 		PhotoLoader pl = new PhotoLoader();
 		Photo photo = pl.load(file);
 		assertNotNull(photo);
