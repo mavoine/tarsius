@@ -3,6 +3,7 @@ package org.tarsius.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.event.ListSelectionEvent;
@@ -186,6 +187,8 @@ public class BrowserControler {
 				PhotoCriteria criteria = photoFilter.getPhotoCriteria();
 				photos = PhotoDAO.getInstance().getPhotos(criteria);
 				log.debug("Photos loaded for display: " + photos.size());
+			} else {
+				photos = new ArrayList<Photo>();
 			}
 		} catch (PersistenceException pe){
 			log.error("Could not load photos", pe);

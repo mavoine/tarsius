@@ -8,6 +8,8 @@ import java.util.Vector;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.tarsius.bean.Photo;
 import org.tarsius.gui.action.PhotoSelectionProvider;
 
@@ -15,15 +17,20 @@ public class PhotoTable extends JList implements PhotoSelectionProvider {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private List<Photo> listData = null;
+	private static final Log log = LogFactory.getLog(PhotoTable.class);
+	
+	private PhotoTableListModel listModel = null;
 	private PhotoCellRenderer photoCellRenderer = null;
 	
 	public PhotoTable() {
+		log.debug("Building " + PhotoTable.class.getSimpleName());
 		this.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		this.photoCellRenderer = new PhotoCellRenderer();
 		this.setCellRenderer(this.photoCellRenderer);
 		this.setVisibleRowCount(-1);
 		this.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		this.listModel = new PhotoTableListModel(this);
+		this.setModel(listModel);
 	}
 
 	@Override
@@ -36,40 +43,33 @@ public class PhotoTable extends JList implements PhotoSelectionProvider {
 	
 	@Override
 	public void setListData(Vector<?> listData) {
-		super.setListData(listData);
 		List<Photo> tmpList = new ArrayList<Photo>();
 		for(Object obj : listData){
 			if(obj instanceof Photo){
 				tmpList.add((Photo)obj);
 			}
 		}
-		setData(tmpList);
+		setListData(tmpList);
 	}
 	
 	@Override
 	public void setListData(Object[] listData) {
-		super.setListData(listData);
 		List<Photo> tmpList = new ArrayList<Photo>();
 		for(Object obj : listData){
 			if(obj instanceof Photo){
 				tmpList.add((Photo)obj);
 			}
 		}
-		setData(tmpList);
+		setListData(tmpList);
 	}
-	
+
 	public void setListData(List<Photo> listData){
-		super.setListData(listData == null ? new Photo[]{} : listData.toArray());
-		setData(listData);
-	}
-	
-	private void setData(List<Photo> listData){
-		this.listData = listData;
+		this.listModel.setListData(listData);
 		this.photoCellRenderer.prepareCells(listData);
 	}
 	
 	public Photo getPhotoAt(int index){
-		return listData.get(index);
+		return (Photo)this.listModel.getElementAt(index);
 	}
 
 	/**
@@ -81,18 +81,18 @@ public class PhotoTable extends JList implements PhotoSelectionProvider {
 		List<Photo> selectedPhotos = new ArrayList<Photo>();
 		int[] selectedIndices = getSelectedIndices();
 		for(int index : selectedIndices){
-			selectedPhotos.add(listData.get(index));
+			selectedPhotos.add((Photo)this.listModel.getElementAt(index));
 		}
 		return selectedPhotos;
 	}
 	
 	public Photo getPhotoAtLocation(int x, int y){
 		int index = this.locationToIndex(new Point(x, y));
-		return listData.get(index);
+		return (Photo)this.listModel.getElementAt(index);
 	}
 	
 	public void addPhotoToSelection(Photo photo){
-		int index = listData.indexOf(photo);
+		int index = listModel.indexOf(photo);
 		if(index != -1){
 			this.addSelectionInterval(index, index);
 		}

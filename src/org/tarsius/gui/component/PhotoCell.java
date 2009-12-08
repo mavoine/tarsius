@@ -71,12 +71,12 @@ public class PhotoCell extends JPanel {
 		photoLabel = new JLabel();
 		photoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		photoLabel.setVerticalAlignment(SwingConstants.CENTER);
-		photoLabel.setSize(
-				ThumbnailsFactory.getInstance().getThumbnailMaxWidth(),
-				ThumbnailsFactory.getInstance().getThumbnailMaxHeight());
 //		photoLabel.setText("loading..."); // TODO add default icon meaning "loading..."
 		
-		borderPanel.add(photoLabel);
+		String sizeConstraint = 
+			"width " + ThumbnailsFactory.getInstance().getThumbnailMaxWidth() + "!," +
+			"height " + ThumbnailsFactory.getInstance().getThumbnailMaxHeight() + "!";
+		borderPanel.add(photoLabel, sizeConstraint);
 		
 		dateLabel = new JLabel();
 		dateLabel.setText(DateUtil.formatDate(photo.getDate()));
