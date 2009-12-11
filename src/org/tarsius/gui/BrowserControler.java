@@ -21,6 +21,7 @@ import org.tarsius.event.EventBelt;
 import org.tarsius.event.EventListener;
 import org.tarsius.gui.event.MouseDoubleClickListener;
 import org.tarsius.gui.event.MouseRightClickListener;
+import org.tarsius.i18n.I18n;
 import org.tarsius.persistence.PersistenceException;
 import org.tarsius.persistence.dao.PhotoDAO;
 import org.tarsius.persistence.dao.TagDAO;
@@ -205,6 +206,16 @@ public class BrowserControler {
 					}
 				}
 			}
+			refreshInfoLabel();
+		}
+	}
+	
+	private void refreshInfoLabel(){
+		if(Context.getGallery().isOpen()){
+			browserPane.infoLabel.setText(I18n.translate("NumberOfPhotosAndSelected", 
+				browserPane.photoTable.getModel().getSize(), browserPane.photoTable.getSelectedPhotos().size()));
+		} else {
+			browserPane.infoLabel.setText("");
 		}
 	}
 	
@@ -285,6 +296,8 @@ public class BrowserControler {
 		browserPane.addTagMenuForPopup.setEnabled(enable);
 		browserPane.removeTagMenu.setEnabled(enable);
 		browserPane.removeTagMenuForPopup.setEnabled(enable);
+		
+		refreshInfoLabel();
 	}
 
 	private void tagSelectionChanged(TreeSelectionEvent event) {

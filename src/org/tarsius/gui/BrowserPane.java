@@ -42,6 +42,8 @@ public class BrowserPane extends JPanel implements Perspective {
 	protected JTextField filterTextField = null;
 	protected JButton clearFilterButton = null;
 	protected JPanel filterPanel = null;
+	protected JPanel infoPanel = null;
+	protected JLabel infoLabel = null;
 
 	// menus
 	//   photo
@@ -70,7 +72,7 @@ public class BrowserPane extends JPanel implements Perspective {
 		MigLayout mainLayout = new MigLayout(
 				"fill",              // layout constraints
 				"[]",        // column constraints
-				"[][grow]"); // row constraints
+				"[][grow][]"); // row constraints
 		this.setLayout(mainLayout);
 		
 		// create the photo table
@@ -121,7 +123,13 @@ public class BrowserPane extends JPanel implements Perspective {
 		splitPane.setLeftComponent(tagPanel);
 		splitPane.setRightComponent(centerPanel);
 		splitPane.setContinuousLayout(false);
-		this.add(splitPane, "grow");
+		this.add(splitPane, "grow, wrap");
+		
+		// create the bottom info panel
+		infoPanel = new JPanel();
+		infoLabel = new JLabel();
+		infoPanel.add(infoLabel);
+		this.add(infoPanel, "");
 		
 		// layout the components to get the available space for the table
 		// TODO is this still required?

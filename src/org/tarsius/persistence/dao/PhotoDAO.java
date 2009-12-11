@@ -31,12 +31,11 @@ public class PhotoDAO {
 	 * @return List<Photo>
 	 * @throws PersistenceException
 	 */
-	@SuppressWarnings("unchecked") // TODO rename getPhotos
+	// TODO rename getPhotos
 	public List<Photo> getPhotos(PhotoCriteria criteria) throws PersistenceException {
 		List<Photo> photos = null;
 		try {
-			photos = (List<Photo>)Database.getInstance().getSqlMap()
-				.queryForList("getPhotos", criteria);
+			photos = Database.getInstance().getSqlMap().queryForList("getPhotos", criteria);
 		} catch (SQLException sqle){
 			throw new PersistenceException("Failed to fetch photo", sqle);
 		}

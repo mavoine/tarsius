@@ -15,9 +15,9 @@
 	x	query photo by tag
 	x	progress monitor for long tasks
 	x	"new gallery" action
-		information boxes at the bottom of window
-			number of photos displayed
-			number of photos selected
+	x	information boxes at the bottom of window
+	x		number of photos displayed
+	x		number of photos selected
 		time distribution graph
 			jump by clicking in the graph
 		import wizard (with selection)
