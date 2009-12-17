@@ -33,7 +33,7 @@ public class TestData {
 			photo1 = new Photo();
 			photo1.setId(1);
 			photo1.setDate(DateUtil.parseDateTime("2008-01-01 12:30:46.0"));
-			photo1.setPath("/testdata/photos/rc0005.jpg");
+			photo1.setPath("/testdata/photos/IMG_3887.jpg");
 			photo1.setPathRelToGallery(true);
 			List<Tag> tags1 = new ArrayList<Tag>();
 			tags1.add(tag1);
@@ -42,7 +42,7 @@ public class TestData {
 			photo2 = new Photo();
 			photo2.setId(2);
 			photo2.setDate(DateUtil.parseDateTime("2008-05-06 13:38:00.0"));
-			photo2.setPath("/testdata/photos/rc0010.jpg");
+			photo2.setPath("/testdata/photos/IMG_1444.jpg");
 			photo2.setPathRelToGallery(true);
 			List<Tag> tags2 = new ArrayList<Tag>();
 			tags2.add(tag2);
@@ -52,7 +52,7 @@ public class TestData {
 			photo3 = new Photo();
 			photo3.setId(3);
 			photo3.setDate(DateUtil.parseDateTime("2008-10-14 02:26:53.0"));
-			photo3.setPath("/testdata/photos/rc0013.jpg");
+			photo3.setPath("/testdata/photos/IMG_1450.jpg");
 			photo3.setPathRelToGallery(true);
 			List<Tag> tags3 = new ArrayList<Tag>();
 			tags3.add(tag3);
@@ -63,7 +63,7 @@ public class TestData {
 			photo4 = new Photo();
 	//		photo4.setId(4);
 			photo4.setDate(DateUtil.parseDateTime("2006-05-13 03:02:55.0"));
-			photo4.setPath("/testdata/photos/rc0014.jpg");
+			photo4.setPath("/testdata/photos/IMG_1586.jpg");
 			photo4.setPathRelToGallery(true);
 		} catch (ParseException pe){
 			throw new RuntimeException("Unable to parse a date", pe);

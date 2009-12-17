@@ -40,11 +40,10 @@ public class BrowserPaneTest extends UITest {
 		String photoDir = Context.getGallery().getPhotosPath() + File.separator;
 		PhotoLoader pl = new PhotoLoader();
 		List<Photo> photos = new ArrayList<Photo>();
-		photos.add(pl.load(new File(photoDir + "rc0005.jpg")));
-		photos.add(pl.load(new File(photoDir + "rc0010.jpg")));
-		photos.add(pl.load(new File(photoDir + "rc0013.jpg")));
-		photos.add(pl.load(new File(photoDir + "rc0014.jpg")));
-		photos.add(pl.load(new File(photoDir + "rc0015.jpg")));
+		photos.add(pl.load(new File(photoDir + "IMG_3887.jpg")));
+		photos.add(pl.load(new File(photoDir + "IMG_1444.jpg")));
+		photos.add(pl.load(new File(photoDir + "IMG_1450.jpg")));
+		photos.add(pl.load(new File(photoDir + "IMG_1586.jpg")));
 		browserPane.photoTable.setListData(photos);
 		
 		browserPane.photoTable.setEnabled(true);

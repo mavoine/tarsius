@@ -13,14 +13,13 @@ public class ViewerPaneTest extends UITest {
 	public static void main(String[] args) {
 		I18n.init();
 		String runDir = System.getProperty("user.dir");
-		// TODO use an image in the testdata set
 		
 		ViewerPane viewerPane = new ViewerPane();
 		
 		// set test data
 		viewerPane.fileNameLabel.setText("IMG_0452.jpg");
 		viewerPane.dateLabel.setText("2009-07-11");
-		File imageFile = new File("/home/user/MMC-SD/CANON_DC/samples/IMG_1810.JPG");//runDir + "/testdata/photos/rc0005.jpg");
+		File imageFile = new File(runDir + "/testdata/photo/IMG_3887.jpg");
 		viewerPane.photoFrame.setImage(imageFile);
 
 		// show the dialog

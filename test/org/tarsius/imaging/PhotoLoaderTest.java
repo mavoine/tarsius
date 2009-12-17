@@ -11,11 +11,11 @@ import org.tarsius.util.DateUtil;
 public class PhotoLoaderTest extends ExtendedTestCase {
 
 	public void testLoad() throws ParseException{
-		File file = new File(Context.getGallery().getRootPath() + "/testdata/photo/rc0005.jpg");
+		File file = new File(Context.getGallery().getRootPath() + "/testdata/photo/IMG_3887.jpg");
 		PhotoLoader pl = new PhotoLoader();
 		Photo photo = pl.load(file);
 		assertNotNull(photo);
-		assertEquals(DateUtil.parseDateTime("2006-05-10 09:59:33"), photo.getDate());
+		assertEquals(DateUtil.parseDateTime("2008-07-12 18:04:36"), photo.getDate());
 	}
 	
 }

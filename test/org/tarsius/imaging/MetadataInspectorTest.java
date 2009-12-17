@@ -1,37 +1,46 @@
 package org.tarsius.imaging;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
 
-import org.apache.sanselan.ImageReadException;
+import junit.framework.TestCase;
+
 import org.apache.sanselan.formats.tiff.constants.TiffConstants;
-import org.tarsius.Context;
 import org.tarsius.imaging.MetadataInspector.Orientation;
-import org.tarsius.test.ExtendedTestCaseNoDb;
 import org.tarsius.util.DateUtil;
 
-public class MetadataInspectorTest extends ExtendedTestCaseNoDb {
+public class MetadataInspectorTest extends TestCase {
 	
-	public void testGetDateShot() throws ParseException{
-		File file = new File(Context.getGallery().getRootPath() 
-				+ "/testdata/photo/rc0005.jpg");
-		MetadataInspector mi = new MetadataInspector(file);
-		assertEquals(DateUtil.parseDateTime("2006-05-10 09:59:33"), 
+	private String rundir = null;
+	
+	@Override
+	protected void setUp() throws Exception {
+		rundir = System.getProperty("user.dir");
+	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		rundir = null;
+	}
+	
+	public void testGetDateShot() throws Exception {
+		MetadataInspector mi = new MetadataInspector(new File(rundir + "/testdata/photo/IMG_3887.jpg"));
+		assertEquals(DateUtil.parseDateTime("2008-07-12 18:04:36"), 
 				mi.getDateShot());
 	}
 
-	public void testPrintTagValue() throws ImageReadException, IOException {
-		File file = new File(Context.getGallery().getRootPath() + "/testdata/photo/rc0005.jpg");
-		MetadataInspector mi = new MetadataInspector(file);
+	public void testPrintTagValue() throws Exception {
+		MetadataInspector mi = new MetadataInspector(new File(rundir + "/testdata/photo/IMG_1586.jpg"));
         String str = mi.readTagValue(TiffConstants.EXIF_TAG_ISO);
-        assertEquals("ISO: 200", str);
+        assertEquals("ISO: 100", str);
 	}
 	
-	public void testGetOrientation(){
-		File file = new File(Context.getGallery().getRootPath() + "/testdata/photo/rc0005.jpg");
-		MetadataInspector mi = new MetadataInspector(file);
+	public void testGetOrientation() throws Exception {
+		MetadataInspector mi = new MetadataInspector(new File(rundir + "/testdata/photo/IMG_3887.jpg"));
 		assertEquals(Orientation.TOP_LEFT, mi.getOrientation());
+		mi = new MetadataInspector(new File(rundir + "/testdata/photo/IMG_1450.jpg"));
+		assertEquals(Orientation.TOP_RIGHT, mi.getOrientation());
+		mi = new MetadataInspector(new File(rundir + "/testdata/photo/IMG_1444.jpg"));
+		assertEquals(Orientation.LEFT_BOTTOM, mi.getOrientation());
 	}
 	
 }

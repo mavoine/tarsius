@@ -1,6 +1,6 @@
-insert into photo (photo_id, date_shot, path, is_path_relative) values (1, '2008-01-01 12:30:46.0', '/testdata/photos/rc0005.jpg', 'true');
-insert into photo (photo_id, date_shot, path, is_path_relative) values (2, '2008-05-06 13:38:00.0', '/testdata/photos/rc0010.jpg', 'true');
-insert into photo (photo_id, date_shot, path, is_path_relative) values (3, '2008-10-14 02:26:53.0', '/testdata/photos/rc0013.jpg', 'true');
+insert into photo (photo_id, date_shot, path, is_path_relative) values (1, '2008-01-01 12:30:46.0', '/testdata/photos/IMG_3887.jpg', 'true');
+insert into photo (photo_id, date_shot, path, is_path_relative) values (2, '2008-05-06 13:38:00.0', '/testdata/photos/IMG_1444.jpg', 'true');
+insert into photo (photo_id, date_shot, path, is_path_relative) values (3, '2008-10-14 02:26:53.0', '/testdata/photos/IMG_1450.jpg', 'true');
 insert into tag (tag_id, name, parent_tag_id) values (1, 'Tag1', null);
 insert into tag (tag_id, name, parent_tag_id) values (2, 'Tag2', null);
 insert into tag (tag_id, name, parent_tag_id) values (3, 'Tag3', 2);
