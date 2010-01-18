@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,7 +26,28 @@ public class MetadataInspector {
 	
 	private IImageMetadata metadata = null;
 	
-	public static enum Orientation {TOP_LEFT, LEFT_BOTTOM, RIGHT_BOTTOM, TOP_RIGHT}
+	public static enum Orientation {
+		TOP_LEFT,
+		TOP_LEFT_INVERTED,
+		LEFT_BOTTOM, 
+		LEFT_BOTTOM_INVERTED, 
+		RIGHT_BOTTOM, 
+		RIGHT_BOTTOM_INVERTED, 
+		TOP_RIGHT,
+		TOP_RIGHT_INVERTED}
+	
+	private static Map<Integer,Orientation> ORIENTATION_MAP = new HashMap<Integer,Orientation>();
+	
+	static {
+		ORIENTATION_MAP.put(1, Orientation.TOP_LEFT);
+		ORIENTATION_MAP.put(2, Orientation.TOP_LEFT_INVERTED);
+		ORIENTATION_MAP.put(3, Orientation.RIGHT_BOTTOM);
+		ORIENTATION_MAP.put(4, Orientation.RIGHT_BOTTOM_INVERTED);
+		ORIENTATION_MAP.put(5, Orientation.TOP_RIGHT_INVERTED);
+		ORIENTATION_MAP.put(6, Orientation.LEFT_BOTTOM);
+		ORIENTATION_MAP.put(7, Orientation.LEFT_BOTTOM_INVERTED);
+		ORIENTATION_MAP.put(8, Orientation.TOP_RIGHT);
+	}
 	
 	public MetadataInspector(File imageFile){
 		try {
@@ -93,17 +116,7 @@ public class MetadataInspector {
 			
 			try {
 				Integer integer = (Integer)tf.getValue();
-				switch(integer){
-				case 1:
-					orientation = Orientation.TOP_LEFT;
-					break;
-				case 8:
-					orientation = Orientation.LEFT_BOTTOM;
-					break;
-				default:
-					orientation = Orientation.TOP_LEFT;
-					break;
-				}
+				orientation = ORIENTATION_MAP.get(integer);
 				log.trace("Orientation: " + orientation);
 			} catch (ImageReadException e) {
 				log.error(e);
