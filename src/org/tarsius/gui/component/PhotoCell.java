@@ -98,6 +98,8 @@ public class PhotoCell extends JPanel {
 				public void execute(Image image) {
 					photoLabel.setIcon(new ImageIcon(image));
 					borderPanel.revalidate();
+					photoLabel.validate();
+					photoLabel.repaint();
 				}
 		});
 	}
