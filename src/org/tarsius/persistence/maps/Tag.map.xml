@@ -74,22 +74,35 @@
 	<delete id="removeTag" parameterClass="Map">
 		DELETE FROM photo_tag WHERE tag_id = #tagId# and photo_id = #photoId#
 	</delete>
-	
-	<insert id="insertTagChild" parameterClass="Map">
-		INSERT INTO tag_children (tag_id, child_tag_id) values (#tagId#, #childTagId#)
-	</insert>
-	
+
 	<delete id="deleteTag" parameterClass="Tag">
 		DELETE FROM tag WHERE tag_id = #id#
 	</delete>
 
-	<delete id="deleteTagFromChildren" parameterClass="Tag">
-		DELETE FROM tag_children WHERE child_tag_id = #id#
-	</delete>
-	
 	<delete id="deleteTagFromPhotoTag" parameterClass="Tag">
 		DELETE FROM photo_tag WHERE tag_id = #id#
 	</delete>
+
+	<delete id="deleteTagChildren" parameterClass="Tag">
+		DELETE FROM tag_children 
+		WHERE 
+			(child_tag_id = #id# OR child_tag_id in (SELECT child_tag_id FROM tag_children WHERE tag_id = #id#))
+			AND
+			tag_id in (SELECT tag_id FROM tag_children WHERE child_tag_id = #id#)
+	</delete>
+	
+	<insert id="insertTagChildren" parameterClass="Tag">
+		INSERT INTO tag_children (
+				(SELECT parent_tag_id, tag_id FROM tag WHERE tag_id = #id# AND parent_tag_id IS NOT NULL)
+			UNION
+				(SELECT tag_id, #id# FROM tag_children WHERE child_tag_id = #idParent#)
+			UNION
+				(SELECT #idParent#, child_tag_id FROM tag_children WHERE tag_id = #id#)
+			UNION
+				(SELECT b.tag_id, a.child_tag_id FROM tag_children a, tag_children b 
+					WHERE a.tag_id = #id# AND b.child_tag_id = #idParent#)
+		)
+	</insert>
 	
 	<select id="countTagChildren" parameterClass="Tag" resultClass="Integer">
 		SELECT COUNT(*) AS nb FROM tag_children WHERE tag_id = #id#

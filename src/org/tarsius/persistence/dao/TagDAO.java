@@ -62,25 +62,12 @@ public class TagDAO {
 		}
 		try {
 			Database.getInstance().getSqlMap().insert("insertTag", tag);
-			insertTagChild(tag);
+			Database.getInstance().getSqlMap().insert("insertTagChildren", tag);
 		} catch (SQLException e) {
 			throw new PersistenceException("Failed to insert tag", e);
 		}
 	}
 	
-	private void insertTagChild(Tag tag) throws SQLException {
-		Integer parentTagId = tag.getIdParent();
-		while(parentTagId != null) {
-			HashMap<String,Integer> paramMap = new HashMap<String,Integer>();
-			paramMap.put("tagId", parentTagId);
-			paramMap.put("childTagId", tag.getId());
-			Database.getInstance().getSqlMap().insert("insertTagChild", paramMap);
-			Tag parentTag = (Tag)Database.getInstance().getSqlMap().queryForObject(
-					"getTag", parentTagId);
-			parentTagId = parentTag.getIdParent();
-		}
-	}
-
 	public void updateTag(Tag tag) throws PersistenceException {
 		if(tag == null){
 			throw new NullPointerException("Tag cannot be null");
@@ -89,9 +76,9 @@ public class TagDAO {
 			throw new NullPointerException("Tag name cannot be null");
 		}
 		try {
-			Database.getInstance().getSqlMap().delete("deleteTagFromChildren", tag);
+			Database.getInstance().getSqlMap().delete("deleteTagChildren", tag);
 			Database.getInstance().getSqlMap().update("updateTag", tag);
-			insertTagChild(tag);
+			Database.getInstance().getSqlMap().insert("insertTagChildren", tag);
 		} catch (SQLException e) {
 			throw new PersistenceException("Failed to update tag", e);
 		}
@@ -103,7 +90,7 @@ public class TagDAO {
 		}
 		try {
 			Database.getInstance().getSqlMap().delete("deleteTagFromPhotoTag", tag);
-			Database.getInstance().getSqlMap().delete("deleteTagFromChildren", tag);
+			Database.getInstance().getSqlMap().delete("deleteTagChildren", tag);
 			Database.getInstance().getSqlMap().delete("deleteTag", tag);
 		} catch (SQLException e) {
 			throw new PersistenceException("Failed to reparent tag", e);
@@ -160,7 +147,6 @@ public class TagDAO {
 		return count;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<Tag> getAllTags() throws PersistenceException {
 		List<Tag> tags = null;
 		try {

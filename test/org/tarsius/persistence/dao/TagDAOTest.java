@@ -32,6 +32,7 @@ public class TagDAOTest extends ExtendedTestCase {
 	public void testInsertTag() throws Exception {
 		Tag tag = new Tag();
 		tag.setName("Some tag");
+		tag.setIdParent(4);
 		TagDAO.getInstance().insertTag(tag);
 		
 		Integer countTags = TagDAO.getInstance().countTags();
@@ -44,13 +45,39 @@ public class TagDAOTest extends ExtendedTestCase {
 		TagDAO.getInstance().updateTag(tag1);
 		tag1 = TagDAO.getInstance().getTag(1);
 		assertEquals("Renamed Tag1", "New name", tag1.getName());
-		tag1.setIdParent(2);
+	}
+	
+	public void testInsertTagChild() throws Exception {
+		TagDAO.getInstance().insertTag(new Tag(null, "Tag6", 4));
+		Tag tag4 = TagDAO.getInstance().getTag(4);
+		Integer count = TagDAO.getInstance().countTagChildren(tag4);
+		assertEquals("Children count", 2, count.intValue());
+	}
+	
+	public void testUpdateTagReparenting() throws Exception {
+		Tag tag1 = TagDAO.getInstance().getTag(1);
+		Tag tag2 = TagDAO.getInstance().getTag(2);
+		tag1.setIdParent(tag2.getId());
 		TagDAO.getInstance().updateTag(tag1);
 		tag1 = TagDAO.getInstance().getTag(1);
-		assertEquals("Reparent: parent id", 2, tag1.getIdParent().intValue());
-		Tag tag2 = TagDAO.getInstance().getTag(2);
+		assertEquals("Reparent: parent id", tag2.getId(), tag1.getIdParent());
+		tag2 = TagDAO.getInstance().getTag(2);
 		Integer childrenCount = TagDAO.getInstance().countTagChildren(tag2);
 		assertEquals("Reparent: children count", 4, childrenCount.intValue());
+	}
+	
+	public void testUpdateTagReparentingBranch() throws Exception {
+		Tag tag1 = TagDAO.getInstance().getTag(1);
+		Tag tag4 = TagDAO.getInstance().getTag(4);
+		tag4.setIdParent(tag1.getId());
+		TagDAO.getInstance().updateTag(tag4);
+		Integer childrenCount = TagDAO.getInstance().countTagChildren(tag1);
+		assertEquals("Count children of tag1", 2, childrenCount.intValue());
+		childrenCount = TagDAO.getInstance().countTagChildren(tag4);
+		assertEquals("Count children of tag4", 1, childrenCount.intValue());
+		Tag tag2 = TagDAO.getInstance().getTag(2);
+		childrenCount = TagDAO.getInstance().countTagChildren(tag2);
+		assertEquals("Count children of tag2", 1, childrenCount.intValue());
 	}
 	
 	public void testDeleteTag() throws Exception {
