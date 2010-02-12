@@ -119,7 +119,7 @@ public class Database {
 	}
 
 	/**
-	 * Executes an sql query.
+	 * Executes an sql statement.
 	 * @param sql
 	 * @return The ResultSet or null is there is none.
 	 * @throws Exception
@@ -148,6 +148,11 @@ public class Database {
 			}
 			if(connection != null){
 				try {
+					connection.commit();
+				} catch (SQLException sqle3){
+					throw new Exception("Commit failed", sqle3);
+				}
+				try {
 					connection.close();
 				} catch (SQLException sqle3){
 					throw new Exception("Connection release failed", sqle3);
@@ -172,22 +177,16 @@ public class Database {
 		try {
 			connection.setAutoCommit(false);
 			stmt = connection.createStatement();
-			for(int i = 0; i < sql.length; i++){
-				log.debug("Add sql to batch: " + sql[i]);
-				stmt.addBatch(sql[i]);
-			}
 			log.debug("Execute batch");
-			stmt.executeBatch();
+			for(int i = 0; i < sql.length; i++){
+				sql[i] = sql[i].trim();
+				if(sql[i] != null && !("".equals(sql[i]))){
+					stmt.execute(sql[i]);
+				}
+			}
 			connection.commit();
 		} catch (Exception ex){
 			log.error("Failed to execute batch", ex);
-			Throwable t = null;
-			do{
-				t = stmt.getWarnings();
-				if(t != null){
-					log.error("Batch failure detail", t.getCause());
-				}
-			} while(t != null);
 			try {
 				connection.rollback();
 			} catch (Exception ex1){
