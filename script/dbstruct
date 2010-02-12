@@ -1,35 +1,34 @@
 CREATE TABLE info (
-   version DOUBLE NOT NULL);
-   @@@
-INSERT INTO info (version) VALUES (0.1);
-   @@@
+   version DOUBLE NOT NULL) @@
+
+INSERT INTO info (version) VALUES (0.1) @@
+
 CREATE TABLE photo (
    photo_id           INTEGER        PRIMARY KEY,
-   date_shot          DATE           NOT NULL,
+   date_shot          TIMESTAMP(0)   NOT NULL,
    path               VARCHAR (1000) NOT NULL,
-   is_path_relative   BOOLEAN        NOT NULL);
-   @@@
-CREATE SEQUENCE seq_photo_id AS INTEGER START WITH 100;
-   @@@
+   is_path_relative   BOOLEAN        NOT NULL) @@
+
+CREATE SEQUENCE seq_photo_id AS INTEGER START WITH 100 @@
+
 CREATE TABLE tag (
    tag_id          INTEGER       PRIMARY KEY,
    name            VARCHAR (250) NOT NULL,
    parent_tag_id   INTEGER,
-   FOREIGN KEY (parent_tag_id) REFERENCES tag(tag_id));
-   @@@
-CREATE SEQUENCE seq_tag_id AS INTEGER START WITH 100;
-   @@@
+   FOREIGN KEY (parent_tag_id) REFERENCES tag(tag_id)) @@
+
+CREATE SEQUENCE seq_tag_id AS INTEGER START WITH 100 @@
+
 CREATE TABLE photo_tag (
    photo_id INTEGER   NOT NULL,
    tag_id   INTEGER   NOT NULL,
    UNIQUE (photo_id, tag_id),
    FOREIGN KEY (photo_id) REFERENCES photo(photo_id),
-   FOREIGN KEY (tag_id)   REFERENCES tag(tag_id));
-   @@@
+   FOREIGN KEY (tag_id)   REFERENCES tag(tag_id)) @@
+
 CREATE TABLE tag_children (
    tag_id       INTEGER   NOT NULL,
    child_tag_id INTEGER   NOT NULL,
    UNIQUE (tag_id, child_tag_id),
    FOREIGN KEY (tag_id)         REFERENCES tag(tag_id),
-   FOREIGN KEY (child_tag_id)   REFERENCES tag(tag_id));
-   @@@
+   FOREIGN KEY (child_tag_id)   REFERENCES tag(tag_id)) @@

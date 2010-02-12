@@ -5,7 +5,7 @@ import java.io.FileReader;
 
 public class ScriptLoader {
 	
-	private String delimiter = "@@@";
+	private String delimiter = "@@";
 	
 	/**
 	 * Returns the current statement delimiter.
