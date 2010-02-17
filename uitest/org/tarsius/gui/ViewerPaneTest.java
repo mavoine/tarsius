@@ -20,7 +20,7 @@ public class ViewerPaneTest extends UITest {
 		// set test data
 		viewerPane.fileNameLabel.setText("IMG_0452.jpg");
 		viewerPane.dateLabel.setText("2009-07-11");
-		File imageFile = new File("/home/user/MMC-SD/CANON_DC/samples/IMG_1810.JPG");//runDir + "/testdata/photos/rc0005.jpg");
+		File imageFile = new File("/home/math/Photos/2008/09/01/IMG_2580.JPG"/*runDir + "/testdata/photos/dégat_0000.JPG"*/);
 		viewerPane.photoFrame.setImage(imageFile);
 
 		// show the dialog
