@@ -36,6 +36,7 @@ public class Application {
 	 */
 	public static void main(String[] args) {
 
+		JFrame.setDefaultLookAndFeelDecorated(true);
 		try {
 			// Set platform L&F
 			String lnfClassName = UIManager.getSystemLookAndFeelClassName();
@@ -53,7 +54,7 @@ public class Application {
 		
 		log.debug("Begin launch");
 		
-		log.debug("Retrive user preferences");
+		log.debug("Retrieve user preferences");
 		// TODO move file access/creation some place else
 		String filePath = Context.getLocalDirectory() + File.separator + 
 			"preferences.properties";
