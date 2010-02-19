@@ -1,5 +1,7 @@
 package org.tarsius;
 
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,7 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.swing.JFrame;
-import javax.swing.UIManager;
+import javax.swing.SwingUtilities;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,22 +39,29 @@ public class Application {
 	public static void main(String[] args) {
 
 		JFrame.setDefaultLookAndFeelDecorated(true);
-		try {
-			// Set platform L&F
-			String lnfClassName = UIManager.getSystemLookAndFeelClassName();
-			log.debug("Setting look&feel: "+ lnfClassName);
-			UIManager.setLookAndFeel(lnfClassName);
-		} catch (Exception e) {
-			log.error("Error setting the Look&Feel", e);
-		}
 		
-		Application app = new Application();
-		app.launch();
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				Application app = new Application();
+				app.launch();
+			}
+		});
 	}
 
 	private void launch(){
 		
 		log.debug("Begin launch");
+		
+		log.debug("Setting Look&Feel");
+		try {
+			// TODO explore usage of high performance L&Fs
+//			// Set platform L&F
+//			String lnfClassName = "org.pushingpixels.substance.api.skin.SubstanceBusinessLookAndFeel";//UIManager.getSystemLookAndFeelClassName();
+//			log.debug("Setting look&feel: "+ lnfClassName);
+//			UIManager.setLookAndFeel(lnfClassName);
+		} catch (Exception e) {
+			log.error("Error setting the Look&Feel", e);
+		}
 		
 		log.debug("Retrieve user preferences");
 		// TODO move file access/creation some place else
@@ -95,15 +104,14 @@ public class Application {
 		mainWindow.show(browserPane);
 		mainWindow.pack();
 
+		// size the window to 75% of main screen
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice[] gs = ge.getScreenDevices(); 
+		mainWindow.setSize((int)(gs[0].getDisplayMode().getWidth() * 0.75), 
+				(int)(gs[0].getDisplayMode().getHeight() * 0.75));
+
 		// show window
 		mainWindow.setVisible(true);
-		if (java.awt.Toolkit.getDefaultToolkit().isFrameStateSupported(
-				JFrame.MAXIMIZED_BOTH)){
-			log.debug("Maximizing window");
-			mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		} else {
-			log.debug("Window maximize not supported on the platform");
-		}
 
 		processGallerySwitch();
 		
