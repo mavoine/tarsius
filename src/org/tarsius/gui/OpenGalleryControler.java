@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -81,10 +81,13 @@ public class OpenGalleryControler implements OkCancellable {
 				Context.getPreferences().removeRecentGallery(selectedGallery);
 			}
 			openGalleryDialog.dispose();
-		} catch (IOException ioe){
-			log.info("Failed to open gallery: " + selectedGallery, ioe);
+		} catch (FileNotFoundException e){
+			log.info("Failed to open gallery: " + selectedGallery);
 			JOptionPane.showMessageDialog(openGalleryDialog, 
 					I18n.translate("InvalidGalleryLocation"));
+		} catch (Exception e){
+			log.error("Exception while opening gallery", e);
+			// TODO notify user of error
 		}
 	}
 	

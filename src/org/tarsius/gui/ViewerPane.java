@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -29,6 +30,7 @@ public class ViewerPane extends JPanel implements Perspective {
 	private static Log log = LogFactory.getLog(ViewerPane.class);
 	
 	// components
+	protected JPanel photoPanel = null;
 	protected JPanel infoPanel = null;
 	protected JLabel fileNameLabel = null;
 	protected JLabel dateLabel = null;
@@ -106,7 +108,8 @@ public class ViewerPane extends JPanel implements Perspective {
 		}
 
 		// assemble the dialog
-		this.add(infoPanel, "grow");
+		JScrollPane scrollPane = new JScrollPane(infoPanel);
+		this.add(scrollPane, "grow");
 		this.add(photoFrame, "grow, w 250:250:, h 250:250:");
 
 		this.validate();
