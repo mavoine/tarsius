@@ -2,12 +2,16 @@ package org.tarsius.persistence.dao;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.tarsius.bean.Photo;
 import org.tarsius.bean.Tag;
 import org.tarsius.persistence.PersistenceException;
 import org.tarsius.test.ExtendedTestCase;
 
 public class TagDAOTest extends ExtendedTestCase {
+	
+	private static Log log = LogFactory.getLog(TagDAOTest.class);
 	
 	public void testCountTags() throws Exception {
 		Integer countTags = TagDAO.getInstance().countTags();
@@ -90,6 +94,10 @@ public class TagDAOTest extends ExtendedTestCase {
 		} catch (PersistenceException e){}
 		Integer childrenCount = TagDAO.getInstance().countTagChildren(tag2);
 		assertEquals("Delete tag: children count", 2, childrenCount.intValue());
+		try {
+			TagDAO.getInstance().deleteTag(tag2);
+			fail("Should have failed because it is not yet supported to delete a tag that has children");
+		} catch (PersistenceException e){}
 	}
 	
 	public void testAddTag() throws Exception {

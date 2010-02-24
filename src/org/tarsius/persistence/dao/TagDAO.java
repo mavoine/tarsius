@@ -88,6 +88,12 @@ public class TagDAO {
 		if(tag == null){
 			throw new NullPointerException("Tag cannot be null");
 		}
+		// validate that the tag has no children
+		// TODO add support for deletion of a tag that has children (move children to the tag's parent)
+		Integer countChildren = countTagChildren(tag);
+		if(countChildren > 0){
+			throw new PersistenceException("Cannot delete tag because it has children");
+		}
 		try {
 			Database.getInstance().getSqlMap().delete("deleteTagFromPhotoTag", tag);
 			Database.getInstance().getSqlMap().delete("deleteTagChildren", tag);

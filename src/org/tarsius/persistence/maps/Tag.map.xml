@@ -5,7 +5,7 @@
 <sqlMap namespace="Tag">
 
 	<insert id="insertTag" parameterClass="Tag">
-		<selectKey type="pre" keyProperty="id" >
+		<selectKey type="pre" keyProperty="id">
 			SELECT NEXT VALUE FOR seq_tag_id as id FROM info
 		</selectKey>
 		INSERT INTO 
@@ -92,18 +92,19 @@
 	</delete>
 	
 	<insert id="insertTagChildren" parameterClass="Tag">
-		INSERT INTO tag_children (
-				(SELECT parent_tag_id, tag_id FROM tag WHERE tag_id = #id# AND parent_tag_id IS NOT NULL)
+		<isNotNull property="idParent">
+		INSERT INTO tag_children (tag_id, child_tag_id) 
+				(SELECT parent_tag_id, tag_id FROM tag WHERE tag_id = #id#)
 			UNION
-				(SELECT tag_id, #id# FROM tag_children WHERE child_tag_id = #idParent#)
+				(SELECT CAST(#idParent# AS INTEGER), child_tag_id FROM tag_children WHERE tag_id = #id#)
 			UNION
-				(SELECT #idParent#, child_tag_id FROM tag_children WHERE tag_id = #id#)
+				(SELECT tag_id, CAST(#id# AS INTEGER) FROM tag_children WHERE child_tag_id = #idParent#)
 			UNION
 				(SELECT b.tag_id, a.child_tag_id FROM tag_children a, tag_children b 
 					WHERE a.tag_id = #id# AND b.child_tag_id = #idParent#)
-		)
+		</isNotNull>
 	</insert>
-	
+
 	<select id="countTagChildren" parameterClass="Tag" resultClass="Integer">
 		SELECT COUNT(*) AS nb FROM tag_children WHERE tag_id = #id#
 	</select>

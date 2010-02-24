@@ -9,7 +9,7 @@ CREATE TABLE photo (
    path               VARCHAR (1000) NOT NULL,
    is_path_relative   BOOLEAN        NOT NULL) @@
 
-CREATE SEQUENCE seq_photo_id AS INTEGER START WITH 100 @@
+CREATE SEQUENCE seq_photo_id AS INTEGER START WITH 1 @@
 
 CREATE TABLE tag (
    tag_id          INTEGER       PRIMARY KEY,
@@ -17,7 +17,7 @@ CREATE TABLE tag (
    parent_tag_id   INTEGER,
    FOREIGN KEY (parent_tag_id) REFERENCES tag(tag_id)) @@
 
-CREATE SEQUENCE seq_tag_id AS INTEGER START WITH 100 @@
+CREATE SEQUENCE seq_tag_id AS INTEGER START WITH 1 @@
 
 CREATE TABLE photo_tag (
    photo_id INTEGER   NOT NULL,

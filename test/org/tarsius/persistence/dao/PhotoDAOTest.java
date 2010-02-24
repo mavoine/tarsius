@@ -31,7 +31,7 @@ public class PhotoDAOTest extends ExtendedTestCase {
 		assertEquals("nb of photos before insert", 3, nbBefore);
 
 		Photo photo = PhotoDAO.getInstance().insertPhoto(TestData.photo4);
-		assertEquals("photo id", 100, photo.getId().intValue());
+		assertEquals("photo id", 4, photo.getId().intValue());
 		
 		int nbAfter = PhotoDAO.getInstance().getCountPhotos();
 		assertEquals("nb of photos after insert", 4, nbAfter);
