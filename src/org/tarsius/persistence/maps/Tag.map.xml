@@ -12,6 +12,12 @@
 			tag (tag_id, name, parent_tag_id) 
 			VALUES (#id#, #name#, #idParent#)
 	</insert>
+
+	<insert id="insertTagNoFetchId" parameterClass="Tag">
+		INSERT INTO 
+			tag (tag_id, name, parent_tag_id) 
+			VALUES (#id#, #name#, #idParent#)
+	</insert>
 	
 	<update id="updateTag" parameterClass="Tag">
 		UPDATE tag SET name = #name#, parent_tag_id = #idParent# where tag_id = #id#

@@ -61,7 +61,11 @@ public class TagDAO {
 			throw new NullPointerException("Tag name cannot be null");
 		}
 		try {
-			Database.getInstance().getSqlMap().insert("insertTag", tag);
+			if(tag.getId() != null){
+				Database.getInstance().getSqlMap().insert("insertTagNoFetchId", tag);
+			} else {
+				Database.getInstance().getSqlMap().insert("insertTag", tag);
+			}
 			Database.getInstance().getSqlMap().insert("insertTagChildren", tag);
 		} catch (SQLException e) {
 			throw new PersistenceException("Failed to insert tag", e);
