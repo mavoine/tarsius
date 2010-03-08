@@ -7,7 +7,9 @@ CREATE TABLE photo (
    photo_id           INTEGER        PRIMARY KEY,
    date_shot          TIMESTAMP(0)   NOT NULL,
    path               VARCHAR (1000) NOT NULL,
-   is_path_relative   BOOLEAN        NOT NULL) @@
+   is_path_relative   BOOLEAN        NOT NULL,
+   version_photo_id   INTEGER,
+   FOREIGN KEY (version_photo_id) REFERENCES photo(photo_id)) @@
 
 CREATE SEQUENCE seq_photo_id AS INTEGER START WITH 1 @@
 

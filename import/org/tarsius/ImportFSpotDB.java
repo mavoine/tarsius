@@ -2,6 +2,7 @@ package org.tarsius;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -50,17 +51,10 @@ public class ImportFSpotDB {
 		gallery.createGallery(galleryFolder.getPath());
 		
 		log.info("Reading dump files");
-//		List<PhotoTemp> photoTempList = new ArrayList<PhotoTemp>();
 		List<String> insertStatements = null;
 		
 		log.info("Importing photos");
 		// import "current version" photos
-//		String command[] = new String[]{"sqlite3.exe",
-//			dataLoc + "photos.db",
-//			"\"select p.id as photo_id, datetime(p.time, 'unixepoch') as date_shot, replace(p.directory_path, '/home/math/Photos', '') || '/' || name as path from photos as p;\""
-//		};
-//		Process p = Runtime.getRuntime().exec(command, null, new File("c:/Cygwin/bin/"));
-//		FileInputStream photoDump = p.getInputStream();
 		FileInputStream photoDump = new FileInputStream(new File(location + "photos.dump"));
 		Scanner scanner = new Scanner(photoDump, "UTF-8");
 		int maxPhotoId = 0;
@@ -68,26 +62,26 @@ public class ImportFSpotDB {
 		while(scanner.hasNextLine()){
 			String[] tokens = scanner.nextLine().split("\\|");
 			insertStatements.add(
-				"insert into photo values (" + tokens[0] + ", '" +
-				tokens[1] + "', '" + tokens[2] + "', TRUE);"
+				"insert into photo (photo_id, date_shot, path, is_path_relative, version_photo_id) values (" + tokens[0] + ", '" +
+				tokens[1] + "', '" + tokens[2] + URLDecoder.decode(tokens[3],"UTF-8") + "', TRUE, null);"
 			);
 			maxPhotoId = Math.max(Integer.parseInt(tokens[0]), maxPhotoId);
 		}
 		insertStatements.add("alter sequence seq_photo_id restart with " + (maxPhotoId + 1) + ";");
 		Database.getInstance().executeBatch(insertStatements.toArray(new String[0]));
 
-//		// import other versions of photos and link them with the "current version"
-//		FileInputStream photoVersionsDump = new FileInputStream(new File(dataLoc + "photo_versions.dump"));
-//		scanner = new Scanner(photoVersionsDump, "UTF-8");
-//		insertStatements = new ArrayList<String>();
-//		while(scanner.hasNextLine()){
-//			String[] tokens = scanner.nextLine().split("\\|");
-//			insertStatements.add(
-//				"insert into photo values (NEXT VALUE FOR seq_photo_id, '" +
-//				tokens[1] + "', '" + tokens[2] + "', TRUE, " + tokens[0] + ");"
-//			);
-//		}
-//		Database.getInstance().executeBatch(insertStatements.toArray(new String[0]));
+		// import other versions of photos and link them with the "current version"
+		FileInputStream photoVersionsDump = new FileInputStream(new File(location + "photo_versions.dump"));
+		scanner = new Scanner(photoVersionsDump, "UTF-8");
+		insertStatements = new ArrayList<String>();
+		while(scanner.hasNextLine()){
+			String[] tokens = scanner.nextLine().split("\\|");
+			insertStatements.add(
+				"insert into photo (photo_id, date_shot, path, is_path_relative, version_photo_id) values (NEXT VALUE FOR seq_photo_id, '" +
+				tokens[1] + "', '" + tokens[2] + URLDecoder.decode(tokens[3],"UTF-8") + "', TRUE, " + tokens[0] + ");"
+			);
+		}
+		Database.getInstance().executeBatch(insertStatements.toArray(new String[0]));
 
 		log.info("Importing tags");
 		addTagsForParentId(location, null);
@@ -98,8 +92,6 @@ public class ImportFSpotDB {
 //		Database.getInstance().executeBatch(updateStatements.toArray(new String[0]));
 		
 		log.info("Importing photo/tag relationships");
-//		p = Runtime.getRuntime().exec("sqlite3.exe " + dataLoc + "photos.db \"select pt.photo_id, pt.tag_id from photo_tags pt where photo_id in (select p.id from photos p where p.id = pt.photo_id) and tag_id in (select t.id from tags t where t.id = pt.tag_id);\"");
-//		FileInputStream photoTagDump = p.getInputStream();
 		FileInputStream photoTagDump = new FileInputStream(new File(location + "photos_tags.dump"));
 		scanner = new Scanner(photoTagDump, "UTF-8");
 		
@@ -107,7 +99,6 @@ public class ImportFSpotDB {
 		while(scanner.hasNextLine()){
 			String[] tokens = scanner.nextLine().split("\\|");
 			insertStatements.add("insert into photo_tag (photo_id, tag_id) values (" + tokens[0] + ", " + tokens[1] + ");");
-//			insertStatements.add("insert into photo_tag (photo_id, tag_id) select photo_id (" + tokens[0] + ", " + tokens[1] + ");");
 		}
 		Database.getInstance().executeBatch(insertStatements.toArray(new String[0]));
 		
@@ -115,16 +106,6 @@ public class ImportFSpotDB {
 	}
 	
 	private void addTagsForParentId(String dataLoc, Integer parentTagId) throws Exception {
-//		Process p = Runtime.getRuntime().exec("sqlite3.exe -nullvalue null " + dataLoc + "photos.db \"select t.id as tag_id, t.name as name, (case when t.category_id = 0 then null else t.category_id end) as parent_tag_id from tags as t where t.category_id = " + parentTagId + ";\"");
-//		String command = "sqlite3.exe -nullvalue null " + dataLoc + "photos.db \"select t.id as tag_id, t.name as name, (case when t.category_id = 0 then null else t.category_id end) as parent_tag_id from tags as t where t.category_id ";
-//		if(parentTagId == null){
-//			command += " = 0";
-//		} else {
-//			command += " = " + parentTagId;
-//		}
-//		command += ";\"";
-//		Process p = Runtime.getRuntime().exec(command);
-//		FileInputStream tagsDump =  p.getInputStream();
 		FileInputStream tagsDump = new FileInputStream(new File(dataLoc + "tags.dump"));
 		Scanner scanner = new Scanner(tagsDump, "UTF-8");
 		while(scanner.hasNextLine()){
