@@ -180,6 +180,7 @@ public class Database {
 			log.debug("Execute batch");
 			for(int i = 0; i < sql.length; i++){
 				sql[i] = sql[i].trim();
+				log.trace("Execute statement: \n" + sql[i]);
 				if(sql[i] != null && !("".equals(sql[i]))){
 					stmt.execute(sql[i]);
 				}
