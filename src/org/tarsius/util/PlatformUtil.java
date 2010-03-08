@@ -16,10 +16,12 @@ public class PlatformUtil {
 	private static Platform currentPlatform = null;
 	
 	static {
-		String platform = System.getProperty("os.name");
-		if("Linux".equals(platform)){
+		String platform = System.getProperty("os.name").toUpperCase();
+		if(platform == null || platform.length() == 0){
+			currentPlatform = Platform.UNKNOWN;
+		} else if(platform.indexOf("LINUX") > -1){
 			currentPlatform = Platform.LINUX;
-		} else if("Windows".equals(platform)){
+		} else if(platform.indexOf("WINDOWS") > -1){
 			currentPlatform = Platform.WINDOWS;
 		} else {
 			currentPlatform = Platform.UNKNOWN;

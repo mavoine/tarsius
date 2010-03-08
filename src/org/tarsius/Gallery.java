@@ -10,14 +10,15 @@ import org.tarsius.event.Event;
 import org.tarsius.event.EventBelt;
 import org.tarsius.persistence.Database;
 import org.tarsius.persistence.ScriptLoader;
+import org.tarsius.util.FileUtil;
 
 public class Gallery {
 	
 	private static Log log = LogFactory.getLog(Gallery.class);
 	
-	public static final String PHOTO_LOCATION = File.separatorChar + "photo";
-	public static final String THUMBS_LOCATION = File.separatorChar + "thumbs";
-	public static final String DATA_LOCATION = File.separatorChar + "data";
+	public static final String PHOTO_LOCATION = File.separatorChar + "photos";
+	public static final String THUMBS_LOCATION = File.separatorChar + ".thumbs";
+	public static final String DATA_LOCATION = File.separatorChar + ".data";
 	public static final String DATABASE_LOCATION = DATA_LOCATION + File.separatorChar + "db";
 	
 	private static String galleryPath = null;
@@ -92,11 +93,20 @@ public class Gallery {
 		
 		log.info("Creating a gallery at '" + path + "'");
 
+		File galleryDir = new File(path);
+		File dataDir = new File(path + DATA_LOCATION);
+		File photosDir = new File(path + PHOTO_LOCATION);
+		File thumbsDir = new File(path + THUMBS_LOCATION);
+
 		log.debug("Creating directory structure");
-		FileUtils.forceMkdir(new File(path));
-		FileUtils.forceMkdir(new File(path + DATA_LOCATION));
-		FileUtils.forceMkdir(new File(path + PHOTO_LOCATION));
-		FileUtils.forceMkdir(new File(path + THUMBS_LOCATION));
+		
+		FileUtils.forceMkdir(galleryDir);
+		FileUtils.forceMkdir(dataDir);
+		FileUtils.forceMkdir(thumbsDir);
+		FileUtils.forceMkdir(photosDir);
+		
+		FileUtil.makeHidden(dataDir);
+		FileUtil.makeHidden(thumbsDir);
 		
 		log.debug("Creating database");
 		Database.getInstance().open(
