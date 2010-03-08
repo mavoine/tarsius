@@ -28,7 +28,7 @@ public class ImageOperationUtil {
 	 * rectangle defined by <code>maxWidth</code> and <code>maxHeight</code>. This method is
 	 * optimized for thumbnails: it values speed over quality and is best suited to scale a large
 	 * image into a small one (less than 300px).
-	 * @param srcImage
+	 * @param srcImageFile
 	 * @param maxWidth
 	 * @param maxHeight
 	 * @return BufferedImage
@@ -55,15 +55,26 @@ public class ImageOperationUtil {
 		if(orientation == Orientation.TOP_LEFT){
 			thumbHeight = clip.height;
 			thumbWidth = clip.width;
+		} else if(orientation == Orientation.TOP_RIGHT){
+			thumbHeight = clip.width;
+			thumbWidth = clip.height;
+			transform.translate(0, thumbHeight);
+			transform.rotate(Math.toRadians(-90.0));
 		} else if(orientation == Orientation.LEFT_BOTTOM){
 			thumbHeight = clip.width;
 			thumbWidth = clip.height;
 			transform.translate(0, thumbHeight);
 			transform.rotate(Math.toRadians(-90.0));
+		} else if(orientation == Orientation.RIGHT_BOTTOM){
+			thumbHeight = clip.height;
+			thumbWidth = clip.width;
+			transform.translate(thumbWidth, thumbHeight);
+			transform.rotate(Math.toRadians(180.0));
 		} else {
 			thumbHeight = clip.height;
 			thumbWidth = clip.width;
 		}
+		// TODO add support for "flipped" orientations
 		resultImage = new BufferedImage(thumbWidth, thumbHeight, 
 				BufferedImage.TYPE_INT_RGB);
 		resultImage.createGraphics().drawImage(scaledImage, transform, null);
