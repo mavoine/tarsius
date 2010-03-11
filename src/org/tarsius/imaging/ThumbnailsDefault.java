@@ -52,17 +52,20 @@ public class ThumbnailsDefault extends Thumbnails {
 		
 		if(this.permanentCachingEnabled && thumbnailFile.exists()){
 			try {
+				log.debug("Reading thumbnail file: " + thumbnailFile.getAbsolutePath());
 				thumbnailImage = ImageIO.read(thumbnailFile);
 				// TODO investigate use of ImageIO.setUseCache()
 			} catch (IOException e) {
 				throw new IOException("Unable to read thumbnail file", e);
 			}
 		} else {
+			String imageFullPath = rootDirectory + relativePathToImage;
 			try {
-				thumbnailImage = ImageOperationUtil.makeThumbnail(new File(rootDirectory + relativePathToImage),
+				log.debug("Creating thumbnail for: " + imageFullPath);
+				thumbnailImage = ImageOperationUtil.makeThumbnail(new File(imageFullPath),
 						getThumbnailMaxWidth(), getThumbnailMaxHeight());
 			} catch (IOException e){
-				throw new IOException("Unable to create the thumbnail image", e);
+				throw new IOException("Unable to create the thumbnail image for " + imageFullPath, e);
 			}
 			if(this.permanentCachingEnabled){
 				try {
