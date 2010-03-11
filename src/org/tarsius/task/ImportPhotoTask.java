@@ -63,20 +63,26 @@ public class ImportPhotoTask extends BackgroundTask {
 			String pathInGallery = Context.getGallery().getPhotosPath() + 
 				PathUtil.pathFromDate(photo.getDate()) +
 				File.separator + file.getName();
-			// copy file to gallery
-			File fileInGallery = new File(pathInGallery);
-			// if a file with the same name already exists in the gallery
-			if(fileInGallery.exists()){
-				// find a name which is available and open the file
-				fileInGallery = findAvailableName(pathInGallery);
+			// if the file is already in the right place in the gallery
+			if(path.equals(pathInGallery)){
+				// no need to move anything, just reinsert the photo in the db
+				log.debug("Photo is already in the gallery, only need to insert in the db");
+			} else {
+				// copy file to gallery
+				File fileInGallery = new File(pathInGallery);
+				// if a file with the same name already exists in the gallery
+				if(fileInGallery.exists()){
+					// find a name which is available and open the file
+					fileInGallery = findAvailableName(pathInGallery);
+				}
+				try {
+					FileUtils.copyFile(file, fileInGallery, true);
+				} catch (IOException e) {
+					throw new RuntimeException("Failed to copy photo to gallery", e);
+				}
+				// load new photo
+				photo = pl.load(fileInGallery);
 			}
-			try {
-				FileUtils.copyFile(file, fileInGallery, true);
-			} catch (IOException e) {
-				throw new RuntimeException("Failed to copy photo to gallery", e);
-			}
-			// load new photo
-			photo = pl.load(fileInGallery);
 			// import into database
 			try {
 				PhotoDAO.getInstance().insertPhoto(photo);
