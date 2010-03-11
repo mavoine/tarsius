@@ -1,5 +1,6 @@
 package org.tarsius.bean;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -23,10 +24,15 @@ public class Photo {
 	}
 
 	public String getPath() {
-		return path;
+		// return platform-dependant form of the path
+		return path == null ? null : path.replace('/', File.separatorChar);
 	}
 
 	public void setPath(String path) {
+		// set the path in a platform-independant way
+		if(path != null){
+			path = path.replace(File.separatorChar, '/');
+		}
 		this.path = path;
 	}
 
