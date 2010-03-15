@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir=".." name="tarsius" default="compile">
+<project basedir="." name="tarsius" default="compile">
 	
 	<tstamp prefix="now">
 	</tstamp>
 	
-	<property name="antdir" value="${basedir}/ant" />
 	<property name="srcdir" value="${basedir}/src" />
 	<property name="libdir" value="${basedir}/lib" />
 	<property name="confdir" value="${basedir}/conf" />
@@ -15,18 +14,20 @@
 	<property name="jardir" value="${builddir}/jar" />
 	<property name="distdir" value="${builddir}/dist" />
 
-	<property file="${antdir}/build.properties" />
+	<property file="${basedir}/build.properties" />
 	<property file="${confdir}/global.properties" />
-
-	<target name="test">
-		<echo>${now.DSTAMP}</echo>
-	</target>
 	
-	<target name="backup" description="">
-		<tar basedir="${basedir}" compression="gzip"
-			destfile="/home/user/MMC-SD/CANON_DC/dev/backup/tarsius.${now.DSTAMP}.tgz">
-		</tar>
-		<echo>Backup completed</echo>
+	<!--
+	<fileset refid="libraries" dir="${libdir}" includes="*.jar" />
+	<pathconvert property="classpath.libs" refid="libraries" />
+	-->
+	
+	<path id="classpath.libraries">
+		
+	</path>
+	
+	<target name="clean">
+		<delete dir="${builddir}" failonerror="true" />
 	</target>
 	
 	<target name="init">
@@ -36,18 +37,25 @@
 	<target name="compile" depends="init">
 		<echo>Compiling</echo>
 		<mkdir dir="${compiledir}"/>
-		<javac destdir="${compiledir}" srcdir="${srcdir}" classpath="${classpath}"
-			verbose="false">
+		<javac destdir="${compiledir}" srcdir="${srcdir}" verbose="false" target="1.6">
+			<classpath>
+	      <fileset dir="${libdir}">
+	        <include name="**/*.jar"/>
+	      </fileset>
+			</classpath>
 		</javac>
+<!--
+	classpath="${classpath}"
 
 		<echo>Copying additional resources</echo>
 		<copy todir="${compiledir}">
 			<fileset dir="${srcdir}" includes="**/*.map.xml" />
 		</copy>
+-->
 	</target>
 	
-	<target name="makejar" depends="compile">
-		<echo>Emptying the jar directory</echo>
+	<target name="jar" depends="compile">
+		<echo>Cleaning the jar directory</echo>
 		<delete dir="${jardir}" includes="*/**" includeemptydirs="true" />
 		<mkdir dir="${jardir}"/>
 
@@ -59,7 +67,7 @@
 		</jar>
 	</target>
 	
-	<target name="makedist" depends="makejar">
+	<target name="dist" depends="clean,jar">
 		<echo>Emptying the dist directory</echo>
 		<delete dir="${distdir}" includes="*/**" includeemptydirs="true" />
 		<mkdir dir="${distdir}"/>
@@ -95,6 +103,21 @@
 		
 		<echo>Copying launch script</echo>
 		<copy todir="${distdir}" file="${bindir}/run"/>
+	</target>
+	
+	<target name="run" depends="compile">
+		<java classname="org.tarsius.Application" failonerror="true" fork="true"
+			jvmversion="1.6"
+			jvmargs="-Xms64m -Xmx128m"
+			args="">
+			<classpath>
+				<pathelement path="${compiledir}"/>
+				<pathelement path="${confdir}"/>
+	      <fileset dir="${libdir}">
+	        <include name="**/*.jar"/>
+	      </fileset>
+			</classpath>
+		</java>
 	</target>
 
 </project>
