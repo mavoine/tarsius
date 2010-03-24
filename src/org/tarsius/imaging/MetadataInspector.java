@@ -107,7 +107,6 @@ public class MetadataInspector {
 	}
 
 	public Orientation getOrientation(){
-		// TODO support other orientations
 		Orientation orientation = Orientation.TOP_LEFT; // default
 		if (metadata instanceof JpegImageMetadata) {
 			JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
@@ -118,8 +117,8 @@ public class MetadataInspector {
 				Integer integer = (Integer)tf.getValue();
 				orientation = ORIENTATION_MAP.get(integer);
 				log.trace("Orientation: " + orientation);
-			} catch (ImageReadException e) {
-				log.error(e);
+			} catch (Exception e) {
+				log.debug("Failed to read orientation", e);
 			}
 		}
 		return orientation;

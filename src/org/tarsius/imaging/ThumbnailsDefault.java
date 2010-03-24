@@ -52,7 +52,9 @@ public class ThumbnailsDefault extends Thumbnails {
 		
 		if(this.permanentCachingEnabled && thumbnailFile.exists()){
 			try {
-				log.debug("Reading thumbnail file: " + thumbnailFile.getAbsolutePath());
+				if(log.isTraceEnabled()){
+					log.trace("Reading thumbnail file: " + thumbnailFile.getAbsolutePath());
+				}
 				thumbnailImage = ImageIO.read(thumbnailFile);
 				// TODO investigate use of ImageIO.setUseCache()
 			} catch (IOException e) {
