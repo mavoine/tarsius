@@ -77,7 +77,32 @@ public class PhotoCell extends JPanel {
 			"width " + ThumbnailsFactory.getInstance().getThumbnailMaxWidth() + "!," +
 			"height " + ThumbnailsFactory.getInstance().getThumbnailMaxHeight() + "!";
 		borderPanel.add(photoLabel, sizeConstraint);
-		
+
+		String thumbnailsFolderPath = Context.getGallery().getPhotosPath();
+		String thumbnailRelPath = photo.getPath(); 
+		if(ThumbnailsFactory.getInstance().thumbnailExists(thumbnailsFolderPath, thumbnailRelPath)){
+			try {
+				Image thumbnailImage = 
+					ThumbnailsFactory.getInstance().getThumbnailNow(thumbnailsFolderPath, thumbnailRelPath);
+				photoLabel.setIcon(new ImageIcon(thumbnailImage));
+			} catch (Exception ex){
+				log.warn("Failed to load thumbnail", ex);
+				photoLabel.setText("error"); // TODO display error icon
+			}
+		} else {
+			// schedule deferred thumbnail loading
+			ThumbnailsFactory.getInstance().getThumbnail(thumbnailsFolderPath, thumbnailRelPath,
+				new ThumbnailsCallback() {
+					public void execute(Image image) {
+						photoLabel.setText(null);
+						photoLabel.setIcon(new ImageIcon(image));
+						borderPanel.revalidate();
+//						photoLabel.validate();
+//						photoLabel.repaint();
+					}
+			});
+		}
+
 		dateLabel = new JLabel();
 		dateLabel.setText(DateUtil.formatDate(photo.getDate()));
 		
@@ -92,16 +117,7 @@ public class PhotoCell extends JPanel {
 		setSelected(false);
 		setHasFocus(false);
 		
-		// load the thumbnail
-		ThumbnailsFactory.getInstance().getThumbnail(Context.getGallery().getPhotosPath(), photo.getPath(),
-			new ThumbnailsCallback() {
-				public void execute(Image image) {
-					photoLabel.setIcon(new ImageIcon(image));
-					borderPanel.revalidate();
-					photoLabel.validate();
-					photoLabel.repaint();
-				}
-		});
+		
 	}
 	
 	private String buildTagList(List<Tag> tags){

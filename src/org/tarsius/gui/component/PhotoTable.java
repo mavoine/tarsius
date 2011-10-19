@@ -36,9 +36,9 @@ public class PhotoTable extends JList implements PhotoSelectionProvider {
 	@Override
 	public void setSize(int width, int height) {
 		super.setSize(width, height);
-		int num = width / 260;
-		int rem = width % 260;
-		this.setFixedCellWidth(260 + (rem / (num > 0 ? num : 1)));
+//		int num = width / 260;
+//		int rem = width % 260;
+//		this.setFixedCellWidth(260 + (rem / (num > 0 ? num : 1)));
 	}
 	
 	@Override

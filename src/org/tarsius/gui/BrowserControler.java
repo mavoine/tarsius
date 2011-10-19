@@ -181,10 +181,14 @@ public class BrowserControler {
 			Event.Type.TAGS_CHANGED})
 	public void refreshPhotos(){
 		photos = null;
-		List<Photo> selectedPhotos = null;
+//		List<Photo> selectedPhotos = null;
+		
+		// clear current selection
+		browserPane.photoTable.getSelectionModel().clearSelection();
+		
 		try {
 			if(Context.getGallery().isOpen()){
-				selectedPhotos = browserPane.photoTable.getSelectedPhotos();
+//				selectedPhotos = browserPane.photoTable.getSelectedPhotos();
 				PhotoCriteria criteria = photoFilter.getPhotoCriteria();
 				photos = PhotoDAO.getInstance().getPhotos(criteria);
 				log.debug("Photos loaded for display: " + photos.size());
@@ -196,16 +200,19 @@ public class BrowserControler {
 			// TODO notify user
 		} finally {
 			// set data
-			browserPane.photoTable.setListData(photos);
-			// restore pre-refresh selection
-			if(selectedPhotos != null){
-				for(Photo photo : selectedPhotos){
-					if(photos.contains(photo)){
-						int index = photos.indexOf(photo);
-						browserPane.photoTable.addSelectionInterval(index, index);
-					}
-				}
-			}
+			//browserPane.photoTable.setListData(photos);
+			browserPane.photoTableControler.setPhotos(photos);
+			
+//			// restore pre-refresh selection
+//			if(selectedPhotos != null){
+//				for(Photo photo : selectedPhotos){
+//					if(photos.contains(photo)){
+//						int index = photos.indexOf(photo);
+//						browserPane.photoTable.addSelectionInterval(index, index);
+//					}
+//				}
+//			}
+			
 			refreshInfoLabel();
 		}
 	}

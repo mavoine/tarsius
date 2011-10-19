@@ -17,6 +17,7 @@ public abstract class Thumbnails {
 	public abstract Integer getThumbnailMaxWidth();
 	public abstract Integer getThumbnailMaxHeight();
 	public abstract void deleteThumbnail(String pathToOriginal);
+	public abstract boolean thumbnailExists(String rootDirectory, String relativePathToImage);
 	
 	protected boolean permanentCachingEnabled = true;
 	

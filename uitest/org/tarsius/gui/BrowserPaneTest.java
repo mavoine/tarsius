@@ -1,5 +1,6 @@
 package org.tarsius.gui;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.List;
 import org.tarsius.Context;
 import org.tarsius.bean.Photo;
 import org.tarsius.bean.Tag;
+import org.tarsius.gui.component.PhotoTableController;
 import org.tarsius.i18n.I18n;
 import org.tarsius.imaging.PhotoLoader;
 import org.tarsius.imaging.ThumbnailsFactory;
@@ -44,17 +46,23 @@ public class BrowserPaneTest extends UITest {
 		photos.add(pl.load(new File(photoDir + "IMG_1444.jpg")));
 		photos.add(pl.load(new File(photoDir + "IMG_1450.jpg")));
 		photos.add(pl.load(new File(photoDir + "IMG_1586.jpg")));
-		browserPane.photoTable.setListData(photos);
+//		browserPane.photoTable.setListData(photos);
 		
 		browserPane.photoTable.setEnabled(true);
 		browserPane.tagTree.setEnabled(true);
 		
 		browserPane.infoLabel.setText(I18n.translate("NumberOfPhotosAndSelected", photos.size(), 0));
 		
-		mainWindow.pack();
+//		mainWindow.pack();
+		mainWindow.setSize(new Dimension(600, 400));
 		mainWindow.show(browserPane);
 
+		PhotoTableController ctlr = new PhotoTableController();
+		ctlr.setPhotoTable(browserPane.photoTable);
+		ctlr.setPhotos(photos);
+
 		showUI(mainWindow);
+		
 	}
 
 }

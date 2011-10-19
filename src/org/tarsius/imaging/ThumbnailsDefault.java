@@ -14,7 +14,6 @@ import org.tarsius.Context;
 
 public class ThumbnailsDefault extends Thumbnails {
 	
-	@SuppressWarnings("unused")
 	private static Log log = LogFactory.getLog(ThumbnailsDefault.class);
 
 	private static final Integer THUMB_MAX_WIDTH  = 256;
@@ -39,6 +38,19 @@ public class ThumbnailsDefault extends Thumbnails {
 		if(this.permanentCachingEnabled){
 			// TODO implement
 		}
+	}
+	
+	@Override
+	public boolean thumbnailExists(String rootDirectory, String relativePathToImage) {
+		File thumbnailFile = null;
+		try {
+			String thumbnailDirPath = resolveThumbnailDirectory(relativePathToImage);
+			String thumbnailFilename = resolveThumbnailFilename(relativePathToImage);
+			thumbnailFile = new File(thumbnailDirPath + thumbnailFilename);
+		} catch (Exception ex){
+			log.warn("Failed to resolve thumbnail file for " + rootDirectory + ", " + relativePathToImage, ex);
+		}
+		return thumbnailFile == null ? false : thumbnailFile.exists();
 	}
 
 	@Override

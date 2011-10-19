@@ -2,7 +2,6 @@ package org.tarsius.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Dimension;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -24,6 +23,7 @@ import org.tarsius.gui.action.DeleteTagAction;
 import org.tarsius.gui.action.RenameTagAction;
 import org.tarsius.gui.component.AddTagMenu;
 import org.tarsius.gui.component.PhotoTable;
+import org.tarsius.gui.component.PhotoTableController;
 import org.tarsius.gui.component.RemoveTagMenu;
 import org.tarsius.gui.component.TagTree;
 import org.tarsius.i18n.I18n;
@@ -37,7 +37,8 @@ public class BrowserPane extends JPanel implements Perspective {
 	protected MigLayout centerLayout = null;
 	protected JPanel centerPanel = null;
 	protected PhotoTable photoTable = null;
-	protected JScrollPane photoTableScrollPane = null;
+	protected PhotoTableController photoTableControler = null;
+//	protected JScrollPane photoTableScrollPane = null;
 	protected TagTree tagTree = null;
 	protected JTextField filterTextField = null;
 	protected JButton clearFilterButton = null;
@@ -78,13 +79,16 @@ public class BrowserPane extends JPanel implements Perspective {
 		// create the photo table
 		photoTable = new PhotoTable();
 		photoTable.setEnabled(false);
-		photoTableScrollPane = new JScrollPane(photoTable);
-		photoTableScrollPane.setVerticalScrollBarPolicy(
-				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		photoTableScrollPane.setHorizontalScrollBarPolicy(
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		photoTableScrollPane.setMinimumSize(new Dimension(300, 300));
+//		photoTableScrollPane = new JScrollPane(photoTable);
+//		photoTableScrollPane.setVerticalScrollBarPolicy(
+//				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//		photoTableScrollPane.setHorizontalScrollBarPolicy(
+//				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//		photoTableScrollPane.setMinimumSize(new Dimension(300, 300));
 
+		photoTableControler = new PhotoTableController();
+		photoTableControler.setPhotoTable(photoTable);
+		
 		// create the tag panel
 		MigLayout tagPanelLayout = new MigLayout(
 				"fill",          // layout constraints
@@ -100,11 +104,12 @@ public class BrowserPane extends JPanel implements Perspective {
 		tagTreeScroll.setVerticalScrollBarPolicy(
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		tagPanel.add(tagsLabel, "wrap");
-		tagPanel.add(tagTreeScroll, "dock south, grow, w 100:100, h 100::");
+		tagPanel.add(tagTreeScroll, "dock south, grow, wmin 75px");
 		
 		// create the center panel
 		centerPanel = new JPanel(new BorderLayout());
-		centerPanel.add(photoTableScrollPane, BorderLayout.CENTER);
+//		centerPanel.add(photoTableScrollPane, BorderLayout.CENTER);
+		centerPanel.add(photoTable, BorderLayout.CENTER);
 		
 		// create the filter input field
 		filterPanel = new JPanel(new MigLayout("", "0[grow]0", "0[]0"));
@@ -123,7 +128,7 @@ public class BrowserPane extends JPanel implements Perspective {
 		splitPane.setLeftComponent(tagPanel);
 		splitPane.setRightComponent(centerPanel);
 		splitPane.setContinuousLayout(false);
-		this.add(splitPane, "grow, wrap");
+		this.add(splitPane, "grow, wrap, wmin 100px, hmin 100px");
 		
 		// create the bottom info panel
 		infoPanel = new JPanel();
